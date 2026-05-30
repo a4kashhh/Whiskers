@@ -1,11 +1,11 @@
 <div align="center">
-  <img src="https://raw.githubusercontent.com/Tarikul-Islam-Anik/Animated-Fluent-Emojis/master/Emojis/Animals/Paw%20Prints.png" alt="PetVerse Logo" width="120" />
+  <img src="https://raw.githubusercontent.com/Tarikul-Islam-Anik/Animated-Fluent-Emojis/master/Emojis/Animals/Paw%20Prints.png" alt="Whiskers Logo" width="120" />
 
-  # PetVerse 🐾
+  # Whiskers 🐾
   
   **A Premium, AI-Powered Virtual Pet Universe**
 
-  [Live Demo](https://your-demo-link.com) • [Report Bug](https://github.com/your-username/petverse/issues) • [Request Feature](https://github.com/your-username/petverse/issues)
+  [Live Demo](https://your-demo-link.com) • [Report Bug](https://github.com/a4kashhh/whiskers/issues) • [Request Feature](https://github.com/a4kashhh/whiskers/issues)
 
   <br />
 
@@ -24,7 +24,7 @@
 
 ## 🌟 Overview
 
-**PetVerse** is a production-grade, highly polished virtual pet simulator that blends gamification, artificial intelligence, and beautiful UI/UX design into a cohesive digital universe. Adopt a companion—from a cozy Panda to a cyberpunk Dragon—and manage their health, happiness, and energy.
+**Whiskers** is a production-grade, highly polished virtual pet simulator that blends gamification, artificial intelligence, and beautiful UI/UX design into a cohesive digital universe. Adopt a companion—from a cozy Panda to a cyberpunk Dragon—and manage their health, happiness, and energy.
 
 Powered by **Google's Gemini 1.5 Flash AI**, your pet possesses a unique, dynamic personality that reacts emotionally to your actions. The entire application interface dynamically shifts its theme, color palette, and particle effects based on your chosen species, delivering a breathtaking and personalized experience.
 
@@ -39,7 +39,7 @@ Powered by **Google's Gemini 1.5 Flash AI**, your pet possesses a unique, dynami
 
 ## 🛠️ Comprehensive Tech Stack
 
-PetVerse was built using cutting-edge, modern web technologies:
+Whiskers was built using cutting-edge, modern web technologies:
 
 ### **Core Framework & Language**
 - **[Next.js 15](https://nextjs.org/)** - React framework using the App Router and Server Components.
@@ -86,8 +86,8 @@ Follow these instructions to get a copy of the project up and running on your lo
 
 1. **Clone the repository**
    ```bash
-   git clone https://github.com/your-username/petverse.git
-   cd petverse
+   git clone https://github.com/a4kashhh/whiskers.git
+   cd whiskers
    ```
 
 2. **Install dependencies**

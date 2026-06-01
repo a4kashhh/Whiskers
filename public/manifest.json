@@ -1,0 +1,27 @@
+{
+  "name": "PetVerse — Your Personal Pet Universe",
+  "short_name": "PetVerse",
+  "description": "Adopt a virtual pet and manage every aspect of their digital life in a stunning AI-powered universe.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#1a0533",
+  "theme_color": "#c084fc",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "/icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "screenshots": [],
+  "categories": ["games", "lifestyle", "entertainment"],
+  "lang": "en"
+}

@@ -152,7 +152,7 @@ export default function LandingClient() {
           <br />
           <span
             style={{
-              background: `linear-gradient(135deg, ${theme.primaryColor}, ${theme.accentColor})`,
+              backgroundImage: `linear-gradient(135deg, ${theme.primaryColor}, ${theme.accentColor})`,
               WebkitBackgroundClip: 'text',
               WebkitTextFillColor: 'transparent',
               backgroundClip: 'text',

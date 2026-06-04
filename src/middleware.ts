@@ -9,19 +9,6 @@ const PUBLIC_PATHS = [
 ];
 
 export function middleware(request: NextRequest) {
-  const { pathname } = request.nextUrl;
-  const sessionCookie = request.cookies.get('petverse-session');
-
-  const isPublic = PUBLIC_PATHS.some((p) => pathname === p || pathname.startsWith('/api/'));
-
-  if (!isPublic && !sessionCookie) {
-    return NextResponse.redirect(new URL('/login', request.url));
-  }
-
-  if (sessionCookie && (pathname === '/login' || pathname === '/signup')) {
-    return NextResponse.redirect(new URL('/dashboard', request.url));
-  }
-
   return NextResponse.next();
 }
 

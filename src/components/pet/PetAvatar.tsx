@@ -141,7 +141,7 @@ export function PetAvatar({ pet, size = 120, interactive = true, onClick }: PetA
 
       {/* Pet emoji */}
       <motion.div
-        key={mood}
+        key={`emoji-${mood}`}
         animate={MOOD_ANIMATIONS[mood]}
         transition={{
           duration: MOOD_DURATION[mood],
@@ -169,7 +169,7 @@ export function PetAvatar({ pet, size = 120, interactive = true, onClick }: PetA
       <motion.div
         initial={{ opacity: 0, scale: 0.8 }}
         animate={{ opacity: 1, scale: 1 }}
-        key={mood}
+        key={`badge-${mood}`}
         style={{
           background: 'var(--card-bg)',
           backdropFilter: 'blur(10px)',

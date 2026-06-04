@@ -5,125 +5,100 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { usePetStore } from '@/stores/usePetStore';
 import { useGameStore } from '@/stores/useGameStore';
 import { useToast } from '@/components/ui/ToastProvider';
+import { useTheme } from '@/lib/theme-engine/ThemeProvider';
 import type { Pet, ActivityType } from '@/types';
 
 const ACTIONS: { type: ActivityType; label: string; emoji: string; color: string; desc: string }[] = [
-  { type: 'feed', label: 'Feed', emoji: '🍖', color: '#fb923c', desc: '+Hunger +Mood' },
-  { type: 'water', label: 'Water', emoji: '💧', color: '#38bdf8', desc: '+Hydration +Energy' },
-  { type: 'play', label: 'Play', emoji: '🎮', color: '#a78bfa', desc: '+Happiness +XP' },
-  { type: 'sleep', label: 'Sleep', emoji: '💤', color: '#818cf8', desc: '+Energy +Sleep' },
-  { type: 'clean', label: 'Clean', emoji: '🛁', color: '#34d399', desc: '+Health +Mood' },
-  { type: 'train', label: 'Train', emoji: '💪', color: '#f59e0b', desc: '+XP +Skills' },
+  { type: 'feed',     label: 'Feed',    emoji: '🍖', color: '#fb923c', desc: '+Hunger' },
+  { type: 'water',    label: 'Water',   emoji: '💧', color: '#38bdf8', desc: '+Energy' },
+  { type: 'play',     label: 'Play',    emoji: '🎮', color: '#a78bfa', desc: '+Happy' },
+  { type: 'sleep',    label: 'Sleep',   emoji: '💤', color: '#818cf8', desc: '+Energy' },
+  { type: 'clean',    label: 'Clean',   emoji: '🛁', color: '#34d399', desc: '+Health' },
+  { type: 'train',    label: 'Train',   emoji: '💪', color: '#f59e0b', desc: '+XP' },
 ];
 
-interface QuickActionsProps {
-  pet: Pet;
-  userId: string;
-}
+interface QuickActionsProps { pet: Pet; userId: string; }
 
 export function QuickActions({ pet, userId }: QuickActionsProps) {
-  const performAction = usePetStore((s) => s.performAction);
+  const performAction   = usePetStore((s) => s.performAction);
   const { addCoins, updateStreak, addNotification } = useGameStore();
   const { success } = useToast();
+  const theme = useTheme();
   const [loading, setLoading] = useState<ActivityType | null>(null);
-  const [particles, setParticles] = useState<{ id: number; x: number; y: number; emoji: string }[]>([]);
+  const [justDone, setJustDone] = useState<ActivityType | null>(null);
 
   async function handleAction(action: typeof ACTIONS[0], e: React.MouseEvent) {
     if (loading) return;
     setLoading(action.type);
-
-    // Spawn floating particles
-    const rect = (e.target as HTMLElement).getBoundingClientRect();
-    const newParticles = Array.from({ length: 5 }, (_, i) => ({
-      id: Date.now() + i,
-      x: rect.left + rect.width / 2,
-      y: rect.top,
-      emoji: action.emoji,
-    }));
-    setParticles((p) => [...p, ...newParticles]);
-    setTimeout(() => setParticles((p) => p.filter((pp) => !newParticles.find((np) => np.id === pp.id))), 1200);
-
     try {
       await performAction(action.type, userId);
       addCoins(5);
       updateStreak();
-      success(`${action.emoji} ${action.label}!`, `${action.desc}`);
+      success(`${action.emoji} ${action.label}!`, action.desc);
       addNotification({
-        userId,
-        type: 'general',
+        userId, type: 'general', icon: action.emoji,
         title: `${pet.name} enjoyed that!`,
         message: `You ${action.label.toLowerCase()}ed ${pet.name}. ${action.desc}`,
         createdAt: Date.now(),
-        icon: action.emoji,
       });
-    } catch (e) {
-      console.error(e);
-    } finally {
+      setJustDone(action.type);
+      setTimeout(() => setJustDone(null), 1500);
+    } catch { /* silent */ } finally {
       setLoading(null);
     }
   }
 
   return (
-    <>
-      {/* Floating particles */}
-      <div style={{ position: 'fixed', inset: 0, pointerEvents: 'none', zIndex: 9998 }}>
-        <AnimatePresence>
-          {particles.map((p) => (
-            <motion.div
-              key={p.id}
-              initial={{ x: p.x, y: p.y, opacity: 1, scale: 1 }}
-              animate={{ y: p.y - 100, opacity: 0, scale: 1.5 }}
-              exit={{ opacity: 0 }}
-              transition={{ duration: 1, ease: 'easeOut' }}
-              style={{ position: 'fixed', fontSize: 24, pointerEvents: 'none' }}
-            >
-              {p.emoji}
-            </motion.div>
-          ))}
-        </AnimatePresence>
+    <div className="glass-card" style={{ padding: '20px 22px' }}>
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 16 }}>
+        <div style={{ fontSize: 13, fontWeight: 700, color: 'var(--text-primary)', letterSpacing: '-0.01em' }}>
+          Quick Actions
+        </div>
+        <div style={{ fontSize: 11, color: 'var(--text-muted)' }}>+5 coins each</div>
       </div>
 
-      <div className="glass-card" style={{ padding: 20 }}>
-        <h3 style={{ fontSize: 15, fontWeight: 700, marginBottom: 16, color: 'var(--text-secondary)' }}>
-          ⚡ Quick Actions
-        </h3>
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 10 }}>
-          {ACTIONS.map((action) => (
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 8 }}>
+        {ACTIONS.map((action) => {
+          const isLoading = loading === action.type;
+          const isDone    = justDone === action.type;
+          return (
             <motion.button
               key={action.type}
-              whileHover={{ scale: 1.05, y: -2 }}
-              whileTap={{ scale: 0.95 }}
+              whileHover={loading ? {} : { scale: 1.03, y: -2 }}
+              whileTap={loading ? {} : { scale: 0.97 }}
               onClick={(e) => handleAction(action, e)}
-              disabled={loading === action.type}
+              disabled={!!loading}
               style={{
-                background: loading === action.type
-                  ? `${action.color}20`
-                  : 'rgba(255,255,255,0.04)',
-                border: `1px solid ${action.color}30`,
-                borderRadius: 14,
-                padding: '14px 10px',
-                cursor: 'pointer',
-                display: 'flex',
-                flexDirection: 'column',
-                alignItems: 'center',
-                gap: 6,
-                transition: 'all 0.2s ease',
-                boxShadow: loading === action.type ? `0 0 12px ${action.color}40` : 'none',
+                padding: '13px 8px',
+                borderRadius: 12,
+                border: `1px solid ${isDone ? action.color + '50' : isLoading ? action.color + '40' : 'rgba(255,255,255,0.07)'}`,
+                background: isDone
+                  ? `${action.color}18`
+                  : isLoading
+                  ? `${action.color}12`
+                  : 'rgba(255,255,255,0.035)',
+                cursor: loading ? 'not-allowed' : 'pointer',
+                display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 5,
+                transition: 'all 0.18s ease',
+                boxShadow: isDone ? `0 0 16px ${action.color}30` : 'none',
+                fontFamily: 'inherit',
               }}
             >
               <motion.span
-                animate={loading === action.type ? { rotate: [0, 15, -15, 0] } : {}}
-                transition={{ duration: 0.4, repeat: Infinity }}
-                style={{ fontSize: 24 }}
+                animate={isLoading ? { rotate: [0, 15, -15, 0], scale: [1, 1.2, 1] } : isDone ? { scale: [1, 1.4, 1] } : {}}
+                transition={{ duration: isLoading ? 0.4 : 0.3, repeat: isLoading ? Infinity : 0 }}
+                style={{ fontSize: 22 }}
               >
-                {action.emoji}
+                {isDone ? '✅' : action.emoji}
               </motion.span>
-              <span style={{ fontSize: 12, fontWeight: 600, color: 'var(--text-primary)' }}>{action.label}</span>
-              <span style={{ fontSize: 10, color: 'var(--text-secondary)', textAlign: 'center', lineHeight: 1.3 }}>{action.desc}</span>
+              <span style={{ fontSize: 11.5, fontWeight: 600, color: isDone ? action.color : 'var(--text-secondary)', letterSpacing: '-0.01em' }}>
+                {action.label}
+              </span>
+              <span style={{ fontSize: 10, color: 'var(--text-muted)' }}>{action.desc}</span>
             </motion.button>
-          ))}
-        </div>
+          );
+        })}
       </div>
-    </>
+    </div>
   );
 }

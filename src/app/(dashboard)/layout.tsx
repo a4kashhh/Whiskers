@@ -11,17 +11,18 @@ import { motion } from 'framer-motion';
 
 export default function DashboardLayout({ children }: { children: ReactNode }) {
   const router = useRouter();
-  const { user, loading, initialized } = useAuthStore();
+  const { user, appUser, loading, initialized } = useAuthStore();
   const pet = usePetStore((s) => s.pet);
 
   useEffect(() => {
-    if (initialized && !loading && !user) {
-      router.push('/login');
+    if (initialized && !loading) {
+      if (!user) {
+        router.push('/login');
+      } else if (appUser && !appUser.activePetId) {
+        router.push('/onboarding');
+      }
     }
-    if (initialized && !loading && user && !pet) {
-      // Check if user needs to onboard
-    }
-  }, [user, loading, initialized, pet, router]);
+  }, [user, appUser, loading, initialized, router]);
 
   if (loading || !initialized) {
     return (
@@ -48,56 +49,35 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
   }
 
   return (
-    <div
-      style={{
-        minHeight: '100vh',
-        display: 'flex',
-        position: 'relative',
-        overflow: 'hidden',
-      }}
-    >
+    <div style={{ minHeight: '100vh', display: 'flex', position: 'relative', overflow: 'hidden' }}>
       {/* Background particles */}
-      {pet && <ParticleCanvas species={pet.species} count={12} />}
+      {pet && <ParticleCanvas species={pet.species} count={10} />}
 
       {/* Sidebar */}
       <Sidebar />
 
-      {/* Main Content */}
+      {/* Main area */}
       <div
+        className="main-content"
         style={{
           flex: 1,
           display: 'flex',
           flexDirection: 'column',
           minWidth: 0,
-          marginLeft: 280,
+          marginLeft: 260,
         }}
-        className="main-content"
       >
         <TopBar />
-        <main
-          style={{
-            flex: 1,
-            padding: '24px',
-            overflowY: 'auto',
-            position: 'relative',
-            zIndex: 1,
-          }}
-        >
+        <main style={{ flex: 1, padding: '24px 28px', overflowY: 'auto', position: 'relative', zIndex: 1 }}>
           <motion.div
-            initial={{ opacity: 0, y: 8 }}
+            initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.4 }}
+            transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
           >
             {children}
           </motion.div>
         </main>
       </div>
-
-      <style>{`
-        @media (max-width: 1024px) {
-          .main-content { margin-left: 0 !important; }
-        }
-      `}</style>
     </div>
   );
 }

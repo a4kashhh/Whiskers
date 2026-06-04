@@ -68,51 +68,64 @@ export function ToastProvider({ children }: { children: ReactNode }) {
     achievement: '#fbbf24',
   };
 
+  const ACCENT: Record<ToastType, string> = {
+    success: '#4ade80', error: '#f87171', info: 'var(--color-primary)', achievement: '#fbbf24',
+  };
+  const BG: Record<ToastType, string> = {
+    success: 'rgba(74,222,128,0.1)', error: 'rgba(248,113,113,0.1)',
+    info: 'rgba(192,132,252,0.1)', achievement: 'rgba(251,191,36,0.1)',
+  };
+
   return (
     <ToastContext.Provider value={ctx}>
       {children}
-      <div className="toast-container" style={{ zIndex: 9999 }}>
+      <div className="toast-container">
         <AnimatePresence mode="popLayout">
-          {toasts.map((toast) => (
+          {toasts.map((t) => (
             <motion.div
-              key={toast.id}
-              initial={{ opacity: 0, x: 60, scale: 0.95 }}
+              key={t.id}
+              initial={{ opacity: 0, x: 48, scale: 0.95 }}
               animate={{ opacity: 1, x: 0, scale: 1 }}
-              exit={{ opacity: 0, x: 60, scale: 0.9 }}
-              transition={{ type: 'spring', damping: 20, stiffness: 300 }}
-              className="toast"
+              exit={{ opacity: 0, x: 48, scale: 0.9 }}
+              transition={{ type: 'spring', damping: 22, stiffness: 350 }}
               style={{
-                borderLeft: `3px solid ${borderColors[toast.type]}`,
+                background: 'rgba(10,5,24,0.92)',
+                backdropFilter: 'blur(32px)',
+                border: `1px solid rgba(255,255,255,0.08)`,
+                borderLeft: `3px solid ${ACCENT[t.type]}`,
+                borderRadius: 14,
+                padding: '14px 16px',
+                boxShadow: `0 20px 60px rgba(0,0,0,0.6), 0 0 0 1px rgba(255,255,255,0.04)`,
+                minWidth: 300, maxWidth: 380,
                 pointerEvents: 'all',
               }}
             >
-              <div style={{ display: 'flex', alignItems: 'flex-start', gap: 10 }}>
-                {toast.icon ? (
-                  <span style={{ fontSize: 20 }}>{toast.icon}</span>
-                ) : (
-                  icons[toast.type]
-                )}
-                <div style={{ flex: 1 }}>
-                  <div style={{ fontWeight: 600, fontSize: 14, color: 'var(--text-primary)' }}>
-                    {toast.title}
+              <div style={{ display: 'flex', alignItems: 'flex-start', gap: 12 }}>
+                {/* Icon */}
+                <div style={{
+                  width: 34, height: 34, borderRadius: 9, flexShrink: 0,
+                  background: BG[t.type],
+                  display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 16,
+                }}>
+                  {t.icon ? t.icon : icons[t.type]}
+                </div>
+                {/* Content */}
+                <div style={{ flex: 1, minWidth: 0 }}>
+                  <div style={{ fontWeight: 700, fontSize: 13.5, color: 'var(--text-primary)', letterSpacing: '-0.01em' }}>
+                    {t.title}
                   </div>
-                  {toast.message && (
-                    <div style={{ fontSize: 12, color: 'var(--text-secondary)', marginTop: 2 }}>
-                      {toast.message}
+                  {t.message && (
+                    <div style={{ fontSize: 12, color: 'var(--text-muted)', marginTop: 3, lineHeight: 1.4 }}>
+                      {t.message}
                     </div>
                   )}
                 </div>
+                {/* Close */}
                 <button
-                  onClick={() => removeToast(toast.id)}
-                  style={{
-                    background: 'none',
-                    border: 'none',
-                    cursor: 'pointer',
-                    color: 'var(--text-secondary)',
-                    padding: 2,
-                  }}
+                  onClick={() => removeToast(t.id)}
+                  style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--text-muted)', padding: 2, flexShrink: 0, fontFamily: 'inherit' }}
                 >
-                  <X size={14} />
+                  <X size={13} />
                 </button>
               </div>
             </motion.div>

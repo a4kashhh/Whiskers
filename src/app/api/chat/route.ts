@@ -3,6 +3,9 @@ import { NextResponse } from 'next/server';
 
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY!);
 
+// Try models in order — fall back if one is overloaded
+const MODELS = ['gemini-2.5-flash', 'gemini-2.0-flash', 'gemini-1.5-flash-latest'];
+
 export async function POST(request: Request) {
   try {
     const { message, petName, petSpecies, petPersonality, petMood, petLevel } = await request.json();
@@ -11,9 +14,7 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: 'Missing required fields' }, { status: 400 });
     }
 
-    const model = genAI.getGenerativeModel({ model: 'gemini-1.5-flash' });
-
-    const systemPrompt = `You are ${petName}, a virtual ${petSpecies} pet in a digital universe called PetVerse. 
+    const systemPrompt = `You are ${petName}, a virtual ${petSpecies} pet in a digital universe called PetVerse.
 
 Your personality is: ${petPersonality}
 Your current mood is: ${petMood}
@@ -31,19 +32,36 @@ IMPORTANT RULES:
 
 Species personality guidelines:
 - Cat: mysterious, independent, occasionally sarcastic but loving
-- Dog: enthusiastic, loyal, always excited  
+- Dog: enthusiastic, loyal, always excited
 - Panda: calm, wise, zen-like
 - Fox: clever, cunning, playful
 - Dragon: majestic, powerful, ancient wisdom with modern charm
 - Bunny: sweet, gentle, easily excited by small things`;
 
-    const result = await model.generateContent([
-      { text: systemPrompt + '\n\nUser says: ' + message },
-    ]);
+    const prompt = systemPrompt + '\n\nUser says: ' + message;
 
-    const response = result.response.text();
+    let lastError: Error | null = null;
 
-    return NextResponse.json({ response });
+    for (const modelName of MODELS) {
+      try {
+        const model = genAI.getGenerativeModel({ model: modelName });
+        const result = await model.generateContent([{ text: prompt }]);
+        const response = result.response.text();
+        return NextResponse.json({ response });
+      } catch (err: unknown) {
+        const error = err as Error & { status?: number };
+        // Only retry on 503 (overloaded) or 404 (model not found) — not on auth errors
+        if (error.message?.includes('503') || error.message?.includes('404') ||
+            error.message?.includes('not found') || error.message?.includes('429')) {
+          lastError = error;
+          continue;
+        }
+        throw err;
+      }
+    }
+
+    // All models failed
+    throw lastError ?? new Error('All models unavailable');
   } catch (error) {
     console.error('Gemini API error:', error);
     return NextResponse.json(

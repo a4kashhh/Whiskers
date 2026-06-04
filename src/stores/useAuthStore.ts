@@ -3,8 +3,8 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 import { onAuthStateChanged, type User } from 'firebase/auth';
-import { auth } from '@/lib/firebase/config';
-import { getUser } from '@/lib/firebase/firestore';
+import { auth, db } from '@/lib/firebase/config';
+import { doc, onSnapshot } from 'firebase/firestore';
 import type { User as AppUser } from '@/types';
 
 interface AuthState {
@@ -29,20 +29,29 @@ export const useAuthStore = create<AuthState>()((set, get) => ({
   setLoading: (loading) => set({ loading }),
 
   initializeAuth: () => {
-    const unsubscribe = onAuthStateChanged(auth, async (firebaseUser) => {
+    let unsubscribeAppUser: (() => void) | undefined;
+
+    const unsubscribeAuth = onAuthStateChanged(auth, (firebaseUser) => {
       if (firebaseUser) {
         set({ user: firebaseUser });
-        try {
-          const appUser = await getUser(firebaseUser.uid);
-          set({ appUser });
-        } catch (e) {
-          console.error('Failed to fetch user data:', e);
-        }
+        if (unsubscribeAppUser) unsubscribeAppUser();
+        unsubscribeAppUser = onSnapshot(doc(db, 'users', firebaseUser.uid), (snap) => {
+          if (snap.exists()) {
+            set({ appUser: snap.data() as AppUser });
+          } else {
+            set({ appUser: null });
+          }
+          set({ loading: false, initialized: true });
+        });
       } else {
-        set({ user: null, appUser: null });
+        if (unsubscribeAppUser) unsubscribeAppUser();
+        set({ user: null, appUser: null, loading: false, initialized: true });
       }
-      set({ loading: false, initialized: true });
     });
-    return unsubscribe;
+
+    return () => {
+      unsubscribeAuth();
+      if (unsubscribeAppUser) unsubscribeAppUser();
+    };
   },
 }));

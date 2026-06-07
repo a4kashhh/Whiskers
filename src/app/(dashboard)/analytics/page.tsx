@@ -103,7 +103,7 @@ function RadialStat({ value, label, color }: { value: number; label: string; col
 const FADE = (d = 0) => ({
   initial: { opacity: 0, y: 14 },
   animate: { opacity: 1, y: 0 },
-  transition: { duration: 0.38, delay: d, ease: [0.16, 1, 0.3, 1] },
+  transition: { duration: 0.38, delay: d, ease: [0.16, 1, 0.3, 1] as [number, number, number, number] },
 });
 
 /* ── Page ────────────────────────────────────────────── */

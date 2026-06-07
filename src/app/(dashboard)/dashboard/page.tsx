@@ -20,7 +20,7 @@ import { CareHistory } from '@/components/dashboard/CareHistory';
 const FADE = (d = 0) => ({
   initial: { opacity: 0, y: 14 },
   animate: { opacity: 1, y: 0 },
-  transition: { duration: 0.38, delay: d, ease: [0.16, 1, 0.3, 1] },
+  transition: { duration: 0.38, delay: d, ease: [0.16, 1, 0.3, 1] as [number, number, number, number] },
 });
 
 const STATS = [
@@ -178,7 +178,7 @@ export default function DashboardPage() {
       {/* ── 4 stat cards ─────────────────────────────────── */}
       <motion.div {...FADE(0.07)} style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 12 }}>
         {STATS.map(({ key, label, icon: Icon, color, bg }) => (
-          <StatCard key={key} label={label} value={(pet as Record<string, number>)[key] ?? 0}
+          <StatCard key={key} label={label} value={(pet as unknown as Record<string, number>)[key] ?? 0}
             Icon={Icon as React.ElementType} color={color} bg={bg} />
         ))}
       </motion.div>

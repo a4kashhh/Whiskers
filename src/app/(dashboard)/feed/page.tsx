@@ -68,7 +68,7 @@ export default function FeedPage() {
       });
       addCoins(Math.floor(food.xpReward / 3));
       setLastFed(food.id);
-      success(`${food.emoji} Yum!`, `${pet.name} loved the ${food.name}!`);
+      success(`${food.emoji} Yum!`, `${pet?.name} loved the ${food.name}!`);
       setTimeout(() => setLastFed(null), 2000);
     } catch {
       showError('Feeding failed', 'Please try again');

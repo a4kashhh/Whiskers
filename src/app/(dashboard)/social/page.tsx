@@ -5,7 +5,7 @@ import { usePetStore } from '@/stores/usePetStore';
 import { useAuthStore } from '@/stores/useAuthStore';
 import { useGameStore } from '@/stores/useGameStore';
 import { PetAvatar } from '@/components/pet/PetAvatar';
-import { Share2, Trophy, Heart, Users } from 'lucide-react';
+import { ShareNetwork, Trophy, Heart, Users } from '@phosphor-icons/react';
 
 // Mock leaderboard data for demonstration
 const MOCK_LEADERBOARD = [
@@ -24,8 +24,8 @@ export default function SocialPage() {
   function shareProfile() {
     if (navigator.share) {
       navigator.share({
-        title: `${pet?.name}'s PetVerse Profile`,
-        text: `Check out my Level ${pet?.level} ${pet?.species} named ${pet?.name} on PetVerse!`,
+        title: `${pet?.name}'s Whiskers Profile`,
+        text: `Check out my Level ${pet?.level} ${pet?.species} named ${pet?.name} on Whiskers!`,
         url: window.location.origin,
       });
     } else {
@@ -81,7 +81,7 @@ export default function SocialPage() {
               className="btn-primary"
               style={{ width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8 }}
             >
-              <Share2 size={16} /> Share Profile
+              <ShareNetwork size={16} weight="bold" /> Share Profile
             </motion.button>
           </motion.div>
         )}

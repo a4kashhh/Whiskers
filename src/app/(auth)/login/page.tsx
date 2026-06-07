@@ -66,7 +66,7 @@ export default function LoginPage() {
           className="gradient-text"
           style={{ fontSize: 32, fontWeight: 800, marginTop: 8, letterSpacing: '-0.5px' }}
         >
-          PetVerse
+          Whiskers
         </h1>
         <p style={{ color: 'rgba(255,255,255,0.5)', fontSize: 14, marginTop: 4 }}>
           Sign in to your universe

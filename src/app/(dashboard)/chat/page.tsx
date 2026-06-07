@@ -2,7 +2,7 @@
 
 import { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Send, Loader2, Sparkles } from 'lucide-react';
+import { PaperPlaneTilt, CircleNotch, Sparkle } from '@phosphor-icons/react';
 import { usePetStore } from '@/stores/usePetStore';
 import { useAuthStore } from '@/stores/useAuthStore';
 import { saveChatMessage, getChatHistory } from '@/lib/firebase/firestore';
@@ -18,7 +18,7 @@ const STARTERS = [
   'What do you want to do?',
   'Tell me a secret!',
   "What's your favourite thing?",
-  'Do you like PetVerse?',
+  'Do you like Whiskers?',
 ];
 
 function formatTime(ts: number) {
@@ -142,7 +142,7 @@ export default function ChatPage() {
           background: 'rgba(192,132,252,0.08)', border: '1px solid rgba(192,132,252,0.15)',
           borderRadius: 100, padding: '4px 10px', fontSize: 11, color: 'var(--text-muted)',
         }}>
-          <Sparkles size={10} /> Gemini AI
+          <Sparkle size={10} weight="fill" /> Gemini AI
         </div>
       </div>
 
@@ -154,7 +154,7 @@ export default function ChatPage() {
       }}>
         {historyLoading ? (
           <div style={{ textAlign: 'center', padding: 40 }}>
-            <Loader2 size={20} style={{ animation: 'spin 1s linear infinite', color: 'var(--text-muted)' }} />
+            <CircleNotch size={20} weight="bold" style={{ animation: 'spin 1s linear infinite', color: 'var(--text-muted)' }} />
           </div>
         ) : messages.length === 0 ? (
           <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }}
@@ -359,8 +359,8 @@ export default function ChatPage() {
           }}
         >
           {loading
-            ? <Loader2 size={17} style={{ animation: 'spin 1s linear infinite' }} />
-            : <Send size={17} />}
+            ? <CircleNotch size={17} weight="bold" style={{ animation: 'spin 1s linear infinite' }} />
+            : <PaperPlaneTilt size={17} weight="fill" />}
         </motion.button>
       </div>
     </div>

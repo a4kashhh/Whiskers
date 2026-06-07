@@ -4,7 +4,7 @@ import { NextResponse } from 'next/server';
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY!);
 
 // Try models in order — fall back if one is overloaded
-const MODELS = ['gemini-2.5-flash', 'gemini-2.0-flash', 'gemini-1.5-flash-latest'];
+const MODELS = ['gemini-2.5-flash', 'gemini-2.0-flash', 'gemini-flash-latest'];
 
 export async function POST(request: Request) {
   try {
@@ -14,7 +14,7 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: 'Missing required fields' }, { status: 400 });
     }
 
-    const systemPrompt = `You are ${petName}, a virtual ${petSpecies} pet in a digital universe called PetVerse.
+    const systemPrompt = `You are ${petName}, a virtual ${petSpecies} pet in a digital universe called Whiskers.
 
 Your personality is: ${petPersonality}
 Your current mood is: ${petMood}
@@ -50,6 +50,7 @@ Species personality guidelines:
         return NextResponse.json({ response });
       } catch (err: unknown) {
         const error = err as Error & { status?: number };
+        console.error(`${modelName} failed:`, error.message);
         // Only retry on 503 (overloaded) or 404 (model not found) — not on auth errors
         if (error.message?.includes('503') || error.message?.includes('404') ||
             error.message?.includes('not found') || error.message?.includes('429')) {

@@ -33,7 +33,7 @@ export default function SignupPage() {
     setLoading(true);
     try {
       await signupWithEmail(email, password, displayName);
-      success('Welcome to PetVerse! 🎉', 'Let\'s adopt your first pet!');
+      success('Welcome to Whiskers! 🎉', 'Let\'s adopt your first pet!');
       router.push('/onboarding');
     } catch (err: unknown) {
       const message = err instanceof Error ? err.message : 'Signup failed';

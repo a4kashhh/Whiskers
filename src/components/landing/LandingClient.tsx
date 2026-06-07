@@ -1,69 +1,83 @@
 'use client';
 
 import { useState } from 'react';
+import { motion } from 'framer-motion';
+import { Sparkle, ArrowRight } from '@phosphor-icons/react';
 import Link from 'next/link';
-import { motion, useScroll, useTransform } from 'framer-motion';
-import { Sparkles, Star, Shield, Zap, Heart, MessageCircle } from 'lucide-react';
+import { PET_THEMES } from '@/lib/theme-engine/themes';
 import { ParticleCanvas } from '@/components/theme/ParticleCanvas';
 import type { PetSpecies } from '@/types';
-import { PET_THEMES } from '@/lib/theme-engine/themes';
 
-const PET_SHOWCASE: { species: PetSpecies; name: string; tagline: string }[] = [
-  { species: 'cat', name: '🐱 Mystic Cat', tagline: 'Neon cosmos explorer' },
-  { species: 'dog', name: '🐶 Golden Pup', tagline: 'Energetic life companion' },
-  { species: 'panda', name: '🐼 Zen Panda', tagline: 'Serene bamboo wisdom' },
-  { species: 'fox', name: '🦊 Autumn Fox', tagline: 'Forest spirit dancer' },
-  { species: 'dragon', name: '🐉 Cyber Dragon', tagline: 'Digital realm guardian' },
-  { species: 'bunny', name: '🐰 Kawaii Bunny', tagline: 'Pastel universe dreamer' },
-];
-
-const FEATURES = [
-  { icon: '🎮', title: 'Dynamic Pet Universe', description: 'Your entire app theme transforms based on your pet species — colors, particles, fonts, animations.' },
-  { icon: '🤖', title: 'AI Pet Companion', description: 'Powered by Gemini AI, your pet responds emotionally based on their personality and mood.' },
-  { icon: '📊', title: 'Gamified Dashboard', description: 'XP, levels, coins, streaks, achievements, and evolution stages keep you engaged every day.' },
-  { icon: '📈', title: 'Beautiful Analytics', description: 'Track mood trends, feeding habits, sleep patterns, and happiness with stunning charts.' },
-  { icon: '🏆', title: 'Achievement System', description: '30+ achievements, rare cosmetics, mystery rewards, and evolution cutscenes.' },
-  { icon: '🌍', title: 'Social Universe', description: 'Share your pet profile, climb leaderboards, and visit other pet universes.' },
-];
-
-export default function LandingClient() {
-  const [hoveredSpecies, setHoveredSpecies] = useState<PetSpecies>('cat');
-  const theme = PET_THEMES[hoveredSpecies];
-
+function Bubble({ size, x, y, delay = 0, color }: { size: number, x: string, y: string, delay?: number, color: string }) {
   return (
-    <div
+    <motion.div
       style={{
-        minHeight: '100vh',
-        background: `linear-gradient(135deg, ${theme.bgGradientFrom} 0%, ${theme.bgGradientTo} 100%)`,
-        transition: 'background 0.8s ease',
-        color: 'white',
-        overflowX: 'hidden',
+        position: 'absolute',
+        left: x,
+        top: y,
+        width: size,
+        height: size,
+        borderRadius: '50%',
+        border: `1.5px solid ${color}40`,
+        background: `${color}10`,
+        boxShadow: `inset -3px -3px 8px ${color}20, 0 0 15px ${color}10`,
+        display: 'flex',
+      }}
+      animate={{
+        y: [0, -15, 0],
+        x: [0, 5, -5, 0],
+      }}
+      transition={{
+        duration: 4,
+        delay,
+        repeat: Infinity,
+        ease: 'easeInOut'
       }}
     >
-      <ParticleCanvas species={hoveredSpecies} count={20} />
+      <div style={{
+        position: 'absolute',
+        top: '15%',
+        left: '20%',
+        width: '30%',
+        height: '30%',
+        borderRadius: '50%',
+        background: `${color}60`,
+        filter: 'blur(2px)'
+      }} />
+    </motion.div>
+  );
+}
+
+const SPECIES_LIST: PetSpecies[] = ['cat', 'dog', 'panda', 'fox', 'dragon', 'bunny'];
+
+export default function LandingClient() {
+  const [animal, setAnimal] = useState<PetSpecies>('cat');
+  const theme = PET_THEMES[animal];
+
+  return (
+    <div style={{ 
+      display: 'flex', 
+      flexDirection: 'column', 
+      minHeight: '100vh', 
+      position: 'relative',
+      background: '#050505',
+      color: '#F7FAFC',
+      overflow: 'hidden'
+    }}>
+      
+      {/* Background Particles */}
+      <ParticleCanvas species={animal} count={25} />
 
       {/* Navbar */}
-      <nav
-        style={{
-          position: 'fixed',
-          top: 0,
-          left: 0,
-          right: 0,
-          zIndex: 100,
-          padding: '16px 48px',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'space-between',
-          background: 'rgba(0,0,0,0.2)',
-          backdropFilter: 'blur(20px)',
-          borderBottom: '1px solid rgba(255,255,255,0.06)',
-        }}
-      >
-        <motion.div
-          initial={{ opacity: 0, x: -20 }}
-          animate={{ opacity: 1, x: 0 }}
-          style={{ display: 'flex', alignItems: 'center', gap: 10 }}
-        >
+      <header style={{
+        display: 'flex',
+        alignItems: 'center',
+        padding: '30px 60px',
+        justifyContent: 'space-between',
+        position: 'relative',
+        zIndex: 20
+      }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
           <motion.span
             animate={{ rotate: [0, 10, -10, 0] }}
             transition={{ duration: 3, repeat: Infinity }}
@@ -71,342 +85,221 @@ export default function LandingClient() {
           >
             🐾
           </motion.span>
-          <span style={{ fontWeight: 800, fontSize: 20 }}>PetVerse</span>
-        </motion.div>
-        <motion.div
-          initial={{ opacity: 0, x: 20 }}
-          animate={{ opacity: 1, x: 0 }}
-          style={{ display: 'flex', gap: 12 }}
-        >
-          <Link
-            href="/login"
-            className="btn-ghost"
-            style={{ textDecoration: 'none', fontSize: 14, padding: '9px 20px' }}
-          >
-            Sign In
-          </Link>
-          <Link
-            href="/signup"
-            className="btn-primary"
-            style={{ textDecoration: 'none', fontSize: 14, padding: '9px 20px' }}
-          >
-            <Sparkles size={14} style={{ display: 'inline', marginRight: 6 }} />
-            Get Started Free
-          </Link>
-        </motion.div>
-      </nav>
-
-      {/* Hero Section */}
-      <section
-        style={{
-          minHeight: '100vh',
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center',
-          justifyContent: 'center',
-          textAlign: 'center',
-          padding: '120px 48px 80px',
-          position: 'relative',
-          zIndex: 10,
-        }}
-      >
-        {/* Badge */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.1 }}
-          style={{
-            display: 'inline-flex',
+          <span style={{ fontWeight: 900, fontSize: 24, letterSpacing: '-0.5px' }}>Whiskers</span>
+        </div>
+        
+        <div style={{ display: 'flex', gap: 16 }}>
+          <Link href="/login" style={{
+            background: 'transparent',
+            color: '#A0AEC0',
+            border: '1.5px solid #2D3748',
+            borderRadius: 100,
+            padding: '10px 24px',
+            fontWeight: 700,
+            fontSize: 14,
+            textDecoration: 'none',
+            transition: 'all 0.2s'
+          }}>Sign In</Link>
+          <Link href="/signup" style={{
+            background: theme.primaryColor,
+            color: '#050505',
+            border: 'none',
+            borderRadius: 100,
+            padding: '10px 24px',
+            fontWeight: 800,
+            fontSize: 14,
+            textDecoration: 'none',
+            display: 'flex',
             alignItems: 'center',
             gap: 8,
-            background: 'rgba(255,255,255,0.06)',
-            border: '1px solid rgba(255,255,255,0.12)',
-            borderRadius: 100,
-            padding: '8px 20px',
-            fontSize: 13,
-            fontWeight: 600,
-            marginBottom: 32,
-            backdropFilter: 'blur(10px)',
-          }}
-        >
-          <Star size={14} style={{ color: '#fbbf24' }} />
-          AI-Powered Virtual Pet Universe
-          <Star size={14} style={{ color: '#fbbf24' }} />
-        </motion.div>
+            boxShadow: `0 0 20px ${theme.glowColor}`,
+            transition: 'all 0.3s'
+          }}>
+            <Sparkle size={16} weight="fill" />
+            Get Started
+          </Link>
+        </div>
+      </header>
 
-        {/* Headline */}
-        <motion.h1
-          initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.2, duration: 0.7 }}
-          style={{
-            fontSize: 'clamp(48px, 8vw, 88px)',
-            fontWeight: 900,
-            lineHeight: 1.05,
-            letterSpacing: '-2px',
-            marginBottom: 24,
-            maxWidth: 900,
-          }}
-        >
-          Your Pet.
-          <br />
-          <span
+      {/* Main Content */}
+      <main style={{
+        display: 'flex',
+        flex: 1,
+        position: 'relative',
+        zIndex: 10
+      }}>
+        
+        {/* Left Visual Section */}
+        <div style={{
+          flex: 1,
+          position: 'relative',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center'
+        }}>
+          {/* Big Dark Blob */}
+          <motion.div 
+            animate={{
+              boxShadow: `0 0 80px ${theme.glowColor}`
+            }}
+            transition={{ duration: 1 }}
             style={{
-              backgroundImage: `linear-gradient(135deg, ${theme.primaryColor}, ${theme.accentColor})`,
-              WebkitBackgroundClip: 'text',
-              WebkitTextFillColor: 'transparent',
-              backgroundClip: 'text',
-              transition: 'all 0.5s ease',
+              position: 'absolute',
+              left: '-10%',
+              top: '5%',
+              width: '120%',
+              height: '110%',
+              background: '#121212',
+              border: `1px solid ${theme.primaryColor}20`,
+              borderRadius: '50% 50% 50% 50% / 60% 60% 40% 40%',
+              zIndex: 0
+            }} 
+          />
+
+          {/* Dynamic Bubbles */}
+          <Bubble size={30} x="10%" y="20%" delay={0} color={theme.primaryColor} />
+          <Bubble size={45} x="18%" y="45%" delay={1} color={theme.accentColor} />
+          <Bubble size={60} x="20%" y="70%" delay={2.5} color={theme.primaryColor} />
+          <Bubble size={25} x="12%" y="80%" delay={1.5} color={theme.secondaryColor} />
+          <Bubble size={40} x="45%" y="30%" delay={0.5} color={theme.primaryColor} />
+          <Bubble size={70} x="40%" y="65%" delay={3} color={theme.accentColor} />
+          <Bubble size={35} x="65%" y="50%" delay={2} color={theme.secondaryColor} />
+          <Bubble size={25} x="60%" y="75%" delay={0.8} color={theme.primaryColor} />
+
+          {/* Floating Pet Emoji */}
+          <motion.div
+            key={animal}
+            initial={{ opacity: 0, scale: 0.5, rotate: -20 }}
+            animate={{ opacity: 1, scale: 1, rotate: 0, y: [0, -20, 0] }}
+            transition={{ 
+              opacity: { duration: 0.5 },
+              scale: { type: "spring", stiffness: 200, damping: 15 },
+              y: { duration: 4, repeat: Infinity, ease: "easeInOut" }
+            }}
+            style={{ 
+              position: 'relative', 
+              zIndex: 10, 
+              fontSize: 220,
+              filter: `drop-shadow(0 0 40px ${theme.glowColor})`
             }}
           >
-            Your Universe.
-          </span>
-        </motion.h1>
+            {theme.emoji}
+          </motion.div>
+        </div>
 
-        {/* Subheadline */}
-        <motion.p
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.35 }}
-          style={{
-            fontSize: 20,
-            color: 'rgba(255,255,255,0.6)',
-            maxWidth: 600,
-            lineHeight: 1.6,
-            marginBottom: 48,
-          }}
-        >
-          Adopt a virtual pet and watch your entire world transform. AI conversations, gamified care,
-          and a living universe that evolves with every interaction.
-        </motion.p>
+        {/* Right Form Section */}
+        <div style={{
+          flex: 1.1,
+          padding: '40px 80px 40px 40px',
+          display: 'flex',
+          flexDirection: 'column',
+          justifyContent: 'center',
+          zIndex: 10
+        }}>
+          
+          <motion.h1 
+            key={`h1-${animal}`}
+            initial={{ opacity: 0, x: 20 }}
+            animate={{ opacity: 1, x: 0 }}
+            style={{ fontSize: 64, fontWeight: 900, marginBottom: 20, letterSpacing: '-1.5px', lineHeight: 1.1 }}
+          >
+            Your Pet.<br/>
+            <span style={{ 
+              background: `linear-gradient(135deg, ${theme.primaryColor}, ${theme.accentColor})`,
+              WebkitBackgroundClip: 'text',
+              WebkitTextFillColor: 'transparent'
+            }}>
+              Your Universe.
+            </span>
+          </motion.h1>
 
-        {/* CTA Buttons */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.45 }}
-          style={{ display: 'flex', gap: 16 }}
-        >
-          <Link
-            href="/signup"
-            className="btn-primary"
-            style={{
-              textDecoration: 'none',
+          <motion.p 
+            initial={{ opacity: 0, x: 20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ delay: 0.1 }}
+            style={{ color: '#A0AEC0', fontSize: 18, lineHeight: 1.6, marginBottom: 40, maxWidth: 520 }}
+          >
+            Adopt an AI-powered virtual companion that learns, evolves, and transforms your entire world. Experience dynamic themes, daily tasks, and a living universe.
+          </motion.p>
+
+          <motion.h3
+            initial={{ opacity: 0, x: 20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ delay: 0.2 }}
+            style={{ fontSize: 20, fontWeight: 800, marginBottom: 24, color: '#F7FAFC' }}
+          >
+            choose your companion
+          </motion.h3>
+
+          {/* Pet Selector Group */}
+          <motion.div 
+            initial={{ opacity: 0, x: 20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ delay: 0.3 }}
+            style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 16, marginBottom: 48, maxWidth: 500 }}
+          >
+            {SPECIES_LIST.map(type => {
+              const petTheme = PET_THEMES[type];
+              const isSelected = animal === type;
+              return (
+                <label key={type} style={{ display: 'block', cursor: 'pointer' }}>
+                  <div style={{
+                    padding: '16px',
+                    borderRadius: 16,
+                    background: isSelected ? `${petTheme.primaryColor}15` : '#121212',
+                    border: `2px solid ${isSelected ? petTheme.primaryColor : '#2D3748'}`,
+                    display: 'flex', 
+                    alignItems: 'center', 
+                    gap: 12,
+                    transition: 'all 0.2s',
+                    boxShadow: isSelected ? `0 0 20px ${petTheme.glowColor}` : 'none'
+                  }}>
+                    <span style={{ fontSize: 24 }}>{petTheme.emoji}</span>
+                    <span style={{ fontSize: 15, fontWeight: 700, color: isSelected ? '#F7FAFC' : '#A0AEC0', textTransform: 'capitalize' }}>
+                      {type}
+                    </span>
+                  </div>
+                  <input 
+                    type="radio" 
+                    name="animal" 
+                    value={type} 
+                    checked={isSelected} 
+                    onChange={(e) => setAnimal(e.target.value as PetSpecies)} 
+                    style={{ display: 'none' }} 
+                  />
+                </label>
+              );
+            })}
+          </motion.div>
+
+          {/* Buttons */}
+          <motion.div
+            initial={{ opacity: 0, x: 20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ delay: 0.4 }}
+            style={{ display: 'flex', gap: 20 }}
+          >
+            <Link href="/signup" style={{ 
+              background: theme.primaryColor,
+              color: '#050505',
+              border: 'none',
+              borderRadius: 100,
+              padding: '16px 36px', 
               fontSize: 16,
-              padding: '16px 36px',
-              display: 'inline-flex',
+              fontWeight: 800,
+              textDecoration: 'none',
+              display: 'flex',
               alignItems: 'center',
               gap: 8,
-            }}
-          >
-            <Sparkles size={18} /> Adopt Your Pet Free
-          </Link>
-          <Link
-            href="/login"
-            className="btn-ghost"
-            style={{
-              textDecoration: 'none',
-              fontSize: 16,
-              padding: '16px 36px',
-            }}
-          >
-            Sign In
-          </Link>
-        </motion.div>
-
-        {/* Floating pet emojis */}
-        <div style={{ position: 'absolute', inset: 0, pointerEvents: 'none', overflow: 'hidden' }}>
-          {['🐾', '✨', '⭐', '💫', '🌟'].map((emoji, i) => (
-            <motion.div
-              key={i}
-              animate={{
-                y: [0, -30, 0],
-                x: [0, (i % 2 === 0 ? 1 : -1) * 15, 0],
-                rotate: [0, (i % 2 === 0 ? 1 : -1) * 15, 0],
-              }}
-              transition={{ duration: 3 + i, repeat: Infinity, delay: i * 0.7 }}
-              style={{
-                position: 'absolute',
-                fontSize: 24 + i * 4,
-                opacity: 0.15,
-                left: `${10 + i * 20}%`,
-                top: `${15 + (i % 3) * 20}%`,
-              }}
-            >
-              {emoji}
-            </motion.div>
-          ))}
-        </div>
-      </section>
-
-      {/* Pet Showcase */}
-      <section style={{ padding: '80px 48px', position: 'relative', zIndex: 10 }}>
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          style={{ textAlign: 'center', marginBottom: 48 }}
-        >
-          <h2 style={{ fontSize: 'clamp(32px, 5vw, 52px)', fontWeight: 800, marginBottom: 16 }}>
-            Choose Your Companion
-          </h2>
-          <p style={{ fontSize: 18, color: 'rgba(255,255,255,0.5)', maxWidth: 500, margin: '0 auto' }}>
-            Each pet species completely transforms your universe
-          </p>
-        </motion.div>
-
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 20, maxWidth: 900, margin: '0 auto' }}>
-          {PET_SHOWCASE.map((pet, i) => {
-            const petTheme = PET_THEMES[pet.species];
-            const isHovered = hoveredSpecies === pet.species;
-            return (
-              <motion.div
-                key={pet.species}
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: i * 0.08 }}
-                whileHover={{ scale: 1.04, y: -6 }}
-                onHoverStart={() => setHoveredSpecies(pet.species)}
-                style={{
-                  background: isHovered
-                    ? `linear-gradient(135deg, ${petTheme.primaryColor}25, ${petTheme.accentColor}15)`
-                    : 'rgba(255,255,255,0.04)',
-                  border: `2px solid ${isHovered ? petTheme.primaryColor : 'rgba(255,255,255,0.06)'}`,
-                  borderRadius: 24,
-                  padding: '28px 20px',
-                  textAlign: 'center',
-                  cursor: 'pointer',
-                  transition: 'all 0.3s ease',
-                  boxShadow: isHovered ? `0 0 32px ${petTheme.glowColor}` : 'none',
-                  backdropFilter: 'blur(10px)',
-                }}
-              >
-                <motion.div
-                  animate={isHovered ? { y: [0, -12, 0], rotate: [0, 5, -5, 0] } : { y: [0, -4, 0] }}
-                  transition={{ duration: isHovered ? 1.5 : 3, repeat: Infinity }}
-                  style={{ fontSize: 56, marginBottom: 12 }}
-                >
-                  {pet.name.split(' ')[0]}
-                </motion.div>
-                <div style={{ fontWeight: 700, fontSize: 16, marginBottom: 6, color: isHovered ? petTheme.primaryColor : 'rgba(255,255,255,0.85)' }}>
-                  {pet.name.split(' ').slice(1).join(' ')}
-                </div>
-                <div style={{ fontSize: 13, color: 'rgba(255,255,255,0.4)' }}>{pet.tagline}</div>
-              </motion.div>
-            );
-          })}
-        </div>
-      </section>
-
-      {/* Features Grid */}
-      <section style={{ padding: '80px 48px', position: 'relative', zIndex: 10 }}>
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          style={{ textAlign: 'center', marginBottom: 56 }}
-        >
-          <h2 style={{ fontSize: 'clamp(32px, 5vw, 52px)', fontWeight: 800, marginBottom: 16 }}>
-            Everything Your Pet Deserves
-          </h2>
-          <p style={{ fontSize: 18, color: 'rgba(255,255,255,0.5)', maxWidth: 500, margin: '0 auto' }}>
-            A complete emotional companion experience built with cutting-edge technology
-          </p>
-        </motion.div>
-
-        <div
-          style={{
-            display: 'grid',
-            gridTemplateColumns: 'repeat(3, 1fr)',
-            gap: 20,
-            maxWidth: 1100,
-            margin: '0 auto',
-          }}
-        >
-          {FEATURES.map((feature, i) => (
-            <motion.div
-              key={feature.title}
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: i * 0.07 }}
-              whileHover={{ y: -6 }}
-              style={{
-                background: 'rgba(255,255,255,0.04)',
-                backdropFilter: 'blur(20px)',
-                border: '1px solid rgba(255,255,255,0.06)',
-                borderRadius: 24,
-                padding: '28px 24px',
-                transition: 'all 0.2s ease',
-              }}
-            >
-              <div style={{ fontSize: 40, marginBottom: 16 }}>{feature.icon}</div>
-              <h3 style={{ fontSize: 18, fontWeight: 700, marginBottom: 10 }}>{feature.title}</h3>
-              <p style={{ fontSize: 14, color: 'rgba(255,255,255,0.5)', lineHeight: 1.6 }}>{feature.description}</p>
-            </motion.div>
-          ))}
-        </div>
-      </section>
-
-      {/* CTA Section */}
-      <section style={{ padding: '100px 48px', textAlign: 'center', position: 'relative', zIndex: 10 }}>
-        <motion.div
-          initial={{ opacity: 0, scale: 0.95 }}
-          whileInView={{ opacity: 1, scale: 1 }}
-          viewport={{ once: true }}
-          style={{
-            background: `linear-gradient(135deg, ${theme.primaryColor}15, ${theme.accentColor}08)`,
-            border: `1px solid ${theme.primaryColor}30`,
-            borderRadius: 32,
-            padding: '60px 48px',
-            maxWidth: 700,
-            margin: '0 auto',
-            backdropFilter: 'blur(20px)',
-            boxShadow: `0 0 60px ${theme.glowColor}`,
-          }}
-        >
-          <motion.div
-            animate={{ y: [0, -16, 0], rotate: [0, 8, -8, 0] }}
-            transition={{ duration: 2, repeat: Infinity }}
-            style={{ fontSize: 72, marginBottom: 24 }}
-          >
-            {PET_THEMES[hoveredSpecies].emoji}
+              boxShadow: `0 0 30px ${theme.glowColor}`,
+              transition: 'all 0.3s'
+            }}>
+              Adopt Now <ArrowRight size={18} weight="bold" />
+            </Link>
           </motion.div>
-          <h2 style={{ fontSize: 40, fontWeight: 900, marginBottom: 16, letterSpacing: '-1px' }}>
-            Your universe awaits
-          </h2>
-          <p style={{ fontSize: 18, color: 'rgba(255,255,255,0.6)', marginBottom: 40 }}>
-            Join thousands of trainers building their pet universe. Free forever, no credit card required.
-          </p>
-          <Link
-            href="/signup"
-            className="btn-primary"
-            style={{
-              textDecoration: 'none',
-              fontSize: 18,
-              padding: '18px 48px',
-              display: 'inline-flex',
-              alignItems: 'center',
-              gap: 10,
-              borderRadius: 14,
-            }}
-          >
-            <Sparkles size={20} /> Start Your Journey
-          </Link>
-        </motion.div>
-      </section>
 
-      {/* Footer */}
-      <footer style={{ padding: '40px 48px', textAlign: 'center', borderTop: '1px solid rgba(255,255,255,0.05)', position: 'relative', zIndex: 10 }}>
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8, marginBottom: 12 }}>
-          <span style={{ fontSize: 20 }}>🐾</span>
-          <span style={{ fontWeight: 700 }}>PetVerse</span>
         </div>
-        <p style={{ color: 'rgba(255,255,255,0.3)', fontSize: 13 }}>
-          Built with ❤️ using Next.js 15, Firebase & Gemini AI
-        </p>
-      </footer>
+      </main>
     </div>
   );
 }

@@ -2,6 +2,11 @@
 
 import { motion } from 'framer-motion';
 import Link from 'next/link';
+import {
+  Heart, Lightning, Cookie, Smiley,
+  Star, Trophy, ChatCircle, GameController,
+  Coins, Fire, ArrowRight,
+} from '@phosphor-icons/react';
 import { usePetStore, xpForLevel } from '@/stores/usePetStore';
 import { useAuthStore } from '@/stores/useAuthStore';
 import { useGameStore } from '@/stores/useGameStore';
@@ -12,78 +17,74 @@ import { QuickActions } from '@/components/dashboard/QuickActions';
 import { DailyTasks } from '@/components/dashboard/DailyTasks';
 import { CareHistory } from '@/components/dashboard/CareHistory';
 
-const SPECIES_EMOJI: Record<string, string> = {
-  cat: '🐱', dog: '🐶', panda: '🐼', fox: '🦊', dragon: '🐉', bunny: '🐰',
-};
-
-function StatRing({ value, label, color }: { value: number; label: string; color: string }) {
-  const r = 22;
-  const circumference = 2 * Math.PI * r;
-  const dash = (value / 100) * circumference;
-  return (
-    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 5 }}>
-      <div style={{ position: 'relative', width: 58, height: 58 }}>
-        <svg width={58} height={58} style={{ transform: 'rotate(-90deg)' }}>
-          <circle cx={29} cy={29} r={r} fill="none" stroke="rgba(255,255,255,0.06)" strokeWidth={4} />
-          <motion.circle
-            cx={29} cy={29} r={r} fill="none" stroke={color} strokeWidth={4}
-            strokeLinecap="round"
-            initial={{ strokeDasharray: `0 ${circumference}` }}
-            animate={{ strokeDasharray: `${dash} ${circumference}` }}
-            transition={{ duration: 1, delay: 0.3, ease: 'easeOut' }}
-            style={{ filter: `drop-shadow(0 0 6px ${color}80)` }}
-          />
-        </svg>
-        <div style={{
-          position: 'absolute', inset: 0,
-          display: 'flex', alignItems: 'center', justifyContent: 'center',
-          fontSize: 13, fontWeight: 700, color: 'var(--text-primary)',
-        }}>
-          {value}
-        </div>
-      </div>
-      <span style={{ fontSize: 11, color: 'var(--text-muted)', fontWeight: 500 }}>{label}</span>
-    </div>
-  );
-}
-
-function InfoCard({ label, value, emoji, sub }: { label: string; value: string | number; emoji: string; sub?: string }) {
-  return (
-    <div className="glass-card" style={{ padding: '16px 18px' }}>
-      <div style={{ fontSize: 20, marginBottom: 8 }}>{emoji}</div>
-      <div style={{ fontSize: 22, fontWeight: 800, color: 'var(--text-primary)', letterSpacing: '-0.03em' }}>
-        {value}
-      </div>
-      <div style={{ fontSize: 12, color: 'var(--text-muted)', marginTop: 2 }}>{label}</div>
-      {sub && <div style={{ fontSize: 11, color: 'var(--color-primary)', marginTop: 4 }}>{sub}</div>}
-    </div>
-  );
-}
-
-const FADE_UP = (delay = 0) => ({
+const FADE = (d = 0) => ({
   initial: { opacity: 0, y: 14 },
   animate: { opacity: 1, y: 0 },
-  transition: { duration: 0.4, delay, ease: [0.16, 1, 0.3, 1] },
+  transition: { duration: 0.38, delay: d, ease: [0.16, 1, 0.3, 1] },
 });
 
+const STATS = [
+  { key: 'health',    label: 'Health',    icon: Heart,    color: '#e11d48', bg: 'rgba(225,29,72,0.08)'   },
+  { key: 'happiness', label: 'Happiness', icon: Smiley,   color: '#ea580c', bg: 'rgba(234,88,12,0.08)'   },
+  { key: 'energy',    label: 'Energy',    icon: Lightning, color: '#d97706', bg: 'rgba(217,119,6,0.08)'  },
+  { key: 'hunger',    label: 'Hunger',    icon: Cookie,   color: '#16a34a', bg: 'rgba(22,163,74,0.08)'   },
+] as const;
+
+function StatCard({ label, value, Icon, color, bg }: {
+  label: string; value: number; Icon: React.ElementType; color: string; bg: string;
+}) {
+  return (
+    <div style={{
+      background: 'var(--bg-card)', border: '1.5px solid var(--border-light)',
+      borderRadius: 18, padding: '18px 16px',
+      boxShadow: '0 2px 8px rgba(0,0,0,0.4)',
+    }}>
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 14 }}>
+        <Icon size={22} weight="duotone" color={color} />
+        <span style={{ fontSize: 12, fontWeight: 800, color: 'var(--text-muted)',
+          textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+          {label}
+        </span>
+      </div>
+      <div style={{ fontSize: 30, fontWeight: 900, color: 'var(--text-primary)', letterSpacing: '-0.04em', lineHeight: 1, marginBottom: 10 }}>
+        {value}<span style={{ fontSize: 14, color: 'var(--text-muted)', fontWeight: 600 }}>/100</span>
+      </div>
+      <div style={{ height: 5, background: 'rgba(255,255,255,0.1)', borderRadius: 100, overflow: 'hidden' }}>
+        <motion.div
+          initial={{ width: 0 }}
+          animate={{ width: `${value}%` }}
+          transition={{ duration: 1, ease: 'easeOut', delay: 0.3 }}
+          style={{ height: '100%', borderRadius: 100, background: color }}
+        />
+      </div>
+    </div>
+  );
+}
+
 export default function DashboardPage() {
-  const pet      = usePetStore((s) => s.pet);
-  const loading  = usePetStore((s) => s.loading);
-  const appUser  = useAuthStore((s) => s.appUser);
-  const theme    = useTheme();
+  const pet     = usePetStore((s) => s.pet);
+  const loading = usePetStore((s) => s.loading);
+  const appUser = useAuthStore((s) => s.appUser);
+  const theme   = useTheme();
   const { coins, streak } = useGameStore();
+  const accent  = theme.primaryColor ?? '#9B6B5A';
 
   if (!appUser) return null;
 
   if (!pet && !loading) {
     return (
       <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', minHeight: '60vh', gap: 20, textAlign: 'center' }}>
-        <motion.div animate={{ y: [0,-12,0] }} transition={{ duration: 2, repeat: Infinity }} style={{ fontSize: 80 }}>🥚</motion.div>
+        <motion.div animate={{ y: [0,-12,0] }} transition={{ duration: 2, repeat: Infinity }}
+          style={{ width: 100, height: 100, borderRadius: 28, background: 'var(--bg-card)',
+            border: '2px solid var(--border-light)', display: 'flex', alignItems: 'center',
+            justifyContent: 'center', boxShadow: '0 8px 32px rgba(0,0,0,0.4)' }}>
+          <Star size={48} weight="duotone" color={accent} />
+        </motion.div>
         <div>
-          <h2 style={{ fontSize: 24, fontWeight: 800, marginBottom: 8, letterSpacing: '-0.03em' }}>Your universe is empty</h2>
-          <p style={{ color: 'var(--text-muted)', fontSize: 14, marginBottom: 24 }}>Adopt your first companion to begin the adventure!</p>
-          <Link href="/onboarding" className="btn-primary" style={{ textDecoration: 'none', display: 'inline-block' }}>
-            ✨ Adopt a Pet
+          <h2 style={{ fontSize: 26, fontWeight: 900, marginBottom: 8, letterSpacing: '-0.03em' }}>Your universe is empty!</h2>
+          <p style={{ color: 'var(--text-muted)', fontSize: 14, fontWeight: 600, marginBottom: 24 }}>Adopt your first companion to begin</p>
+          <Link href="/onboarding" className="btn-primary" style={{ textDecoration: 'none', display: 'inline-flex', alignItems: 'center', gap: 8 }}>
+            Get Started <ArrowRight size={16} weight="bold" />
           </Link>
         </div>
       </div>
@@ -92,9 +93,9 @@ export default function DashboardPage() {
 
   if (loading || !pet) {
     return (
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(180px, 1fr))', gap: 12 }}>
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 12 }}>
         {Array.from({ length: 8 }).map((_, i) => (
-          <div key={i} className="glass-card animate-shimmer" style={{ height: 90 }} />
+          <div key={i} className="animate-shimmer" style={{ height: 110, borderRadius: 18, background: 'var(--bg-card)' }} />
         ))}
       </div>
     );
@@ -102,137 +103,137 @@ export default function DashboardPage() {
 
   const xpMax = xpForLevel(pet.level);
   const xpPct = Math.min(100, (pet.xp / xpMax) * 100);
-  const name  = appUser.displayName?.split(' ')[0] || 'Trainer';
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
 
-      {/* ── Page header ─────────────────────────────────────────────── */}
-      <motion.div {...FADE_UP(0)} style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between' }}>
-        <div>
-          <h1 style={{ fontSize: 24, fontWeight: 800, letterSpacing: '-0.03em', color: 'var(--text-primary)' }}>
-            Good {new Date().getHours() < 12 ? 'morning' : new Date().getHours() < 18 ? 'afternoon' : 'evening'}, {name} 👋
-          </h1>
-          <p style={{ color: 'var(--text-muted)', fontSize: 13.5, marginTop: 4 }}>
-            {pet.name} is {pet.mood > 70 ? 'in a great mood today!' : pet.mood > 40 ? 'doing okay — some love helps.' : 'feeling a bit down. Cheer them up!'}
-          </p>
+      {/* ── Hero banner ─────────────────────────────────── */}
+      <motion.div {...FADE(0)} style={{
+        background: `linear-gradient(135deg, ${accent}15, ${accent}06)`,
+        border: `1.5px solid ${accent}22`,
+        borderRadius: 24, padding: '22px 24px',
+        display: 'flex', alignItems: 'center', gap: 24,
+      }}>
+        {/* Pet avatar */}
+        <motion.div
+          animate={{ y: [0, -8, 0] }}
+          transition={{ duration: 3.5, repeat: Infinity, ease: 'easeInOut' }}
+          style={{ flexShrink: 0 }}
+        >
+          <PetAvatar pet={pet} size={96} interactive={false} />
+        </motion.div>
+
+        {/* Info */}
+        <div style={{ flex: 1 }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 6 }}>
+            <h2 style={{ fontSize: 26, fontWeight: 900, letterSpacing: '-0.04em', color: 'var(--text-primary)' }}>
+              {pet.name}
+            </h2>
+            <span style={{ background: accent, color: 'white', borderRadius: 100, padding: '2px 10px', fontSize: 12, fontWeight: 800 }}>
+              Lv.{pet.level}
+            </span>
+            <span style={{ background: 'rgba(155,107,90,0.1)', color: accent, borderRadius: 100, padding: '2px 10px',
+              fontSize: 12, fontWeight: 700, textTransform: 'capitalize', border: `1px solid ${accent}20` }}>
+              {pet.personality}
+            </span>
+          </div>
+          <div style={{ fontSize: 13.5, color: 'var(--text-secondary)', fontWeight: 600, marginBottom: 16 }}>
+            {pet.mood > 70 ? 'Feeling amazing today!' : pet.mood > 40 ? 'Doing pretty good!' : 'Needs a little love'}
+          </div>
+          {/* XP bar */}
+          <div>
+            <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 6 }}>
+              <span style={{ fontSize: 11, color: 'var(--text-muted)', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.06em' }}>Experience</span>
+              <span style={{ fontSize: 12, color: accent, fontWeight: 800 }}>{pet.xp} / {xpMax} XP</span>
+            </div>
+            <div className="progress-track" style={{ height: 8 }}>
+              <motion.div className="progress-fill" initial={{ width: 0 }} animate={{ width: `${xpPct}%` }}
+                transition={{ duration: 1.2, ease: 'easeOut' }}
+                style={{ background: `linear-gradient(90deg, ${accent}, ${accent}cc)` }} />
+            </div>
+          </div>
         </div>
-        <div style={{ display: 'flex', gap: 8, flexShrink: 0 }}>
-          <div style={{
-            display: 'flex', alignItems: 'center', gap: 6,
-            background: 'rgba(251,191,36,0.08)', border: '1px solid rgba(251,191,36,0.15)',
-            borderRadius: 100, padding: '7px 14px', fontSize: 13, fontWeight: 600, color: '#fbbf24',
-          }}>🪙 {coins}</div>
+
+        {/* Coins + streak */}
+        <div style={{ display: 'flex', gap: 10, flexShrink: 0 }}>
+          <div style={{ background: 'var(--bg-card)', border: '1.5px solid rgba(202,138,4,0.25)',
+            borderRadius: 16, padding: '14px 16px', textAlign: 'center',
+            boxShadow: '0 2px 8px rgba(0,0,0,0.4)', minWidth: 70 }}>
+            <Coins size={22} weight="duotone" color="#ca8a04" style={{ display: 'block', margin: '0 auto 6px' }} />
+            <div style={{ fontSize: 18, fontWeight: 900, color: '#ca8a04' }}>{coins}</div>
+            <div style={{ fontSize: 10, color: 'var(--text-muted)', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.04em' }}>Coins</div>
+          </div>
           {streak > 0 && (
-            <div style={{
-              display: 'flex', alignItems: 'center', gap: 6,
-              background: 'rgba(251,146,60,0.08)', border: '1px solid rgba(251,146,60,0.15)',
-              borderRadius: 100, padding: '7px 14px', fontSize: 13, fontWeight: 600, color: '#fb923c',
-            }}>🔥 {streak}d streak</div>
+            <div style={{ background: 'var(--bg-card)', border: '1.5px solid rgba(220,38,38,0.2)',
+              borderRadius: 16, padding: '14px 16px', textAlign: 'center',
+              boxShadow: '0 2px 8px rgba(0,0,0,0.4)', minWidth: 70 }}>
+              <Fire size={22} weight="duotone" color="#dc2626" style={{ display: 'block', margin: '0 auto 6px' }} />
+              <div style={{ fontSize: 18, fontWeight: 900, color: '#dc2626' }}>{streak}</div>
+              <div style={{ fontSize: 10, color: 'var(--text-muted)', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.04em' }}>Streak</div>
+            </div>
           )}
         </div>
       </motion.div>
 
-      {/* ── Stats cards row ──────────────────────────────────────────── */}
-      <motion.div {...FADE_UP(0.05)} style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 12 }}>
-        <InfoCard emoji="❤️" label="Health" value={pet.health} sub={pet.health > 80 ? 'Excellent' : pet.health > 50 ? 'Good' : 'Needs care'} />
-        <InfoCard emoji="😊" label="Happiness" value={pet.happiness} sub={pet.happiness > 80 ? 'Overjoyed' : 'Content'} />
-        <InfoCard emoji="⚡" label="Energy" value={pet.energy} sub={pet.energy > 60 ? 'Ready to play' : 'Needs rest'} />
-        <InfoCard emoji="🍖" label="Hunger" value={pet.hunger} sub={pet.hunger > 60 ? 'Well fed' : 'Getting hungry'} />
+      {/* ── 4 stat cards ─────────────────────────────────── */}
+      <motion.div {...FADE(0.07)} style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 12 }}>
+        {STATS.map(({ key, label, icon: Icon, color, bg }) => (
+          <StatCard key={key} label={label} value={(pet as Record<string, number>)[key] ?? 0}
+            Icon={Icon as React.ElementType} color={color} bg={bg} />
+        ))}
       </motion.div>
 
-      {/* ── Main 2-column layout ─────────────────────────────────────── */}
-      <div style={{ display: 'grid', gridTemplateColumns: '300px 1fr', gap: 16, alignItems: 'start' }}>
+      {/* ── 2-col layout ─────────────────────────────────── */}
+      <div style={{ display: 'grid', gridTemplateColumns: '272px 1fr', gap: 16, alignItems: 'start' }}>
 
-        {/* ── Pet card ────────────────────────────────────────────────── */}
-        <motion.div {...FADE_UP(0.1)} className="glass-card" style={{ padding: '28px 24px', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 20 }}>
-          {/* Glow ring behind avatar */}
-          <div style={{ position: 'relative', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-            <div style={{
-              position: 'absolute',
-              width: 160, height: 160, borderRadius: '50%',
-              background: `radial-gradient(circle, ${theme.glowColor} 0%, transparent 70%)`,
-              filter: 'blur(20px)',
-            }} />
-            <PetAvatar pet={pet} size={100} />
+        {/* Left: live stats panel */}
+        <motion.div {...FADE(0.1)} style={{
+          background: 'var(--bg-card)', border: '1.5px solid var(--border-light)',
+          borderRadius: 22, padding: '20px 18px',
+          boxShadow: '0 2px 12px rgba(0,0,0,0.4)',
+        }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 18 }}>
+            <Heart size={16} weight="duotone" color={accent} />
+            <span style={{ fontWeight: 800, fontSize: 14, color: 'var(--text-primary)' }}>Live Stats</span>
           </div>
-
-          {/* Name + stage */}
-          <div style={{ textAlign: 'center' }}>
-            <div style={{ fontSize: 20, fontWeight: 800, letterSpacing: '-0.03em', marginBottom: 4 }}>{pet.name}</div>
-            <div style={{ display: 'flex', gap: 6, justifyContent: 'center', flexWrap: 'wrap' }}>
-              <span className="badge badge-primary" style={{ textTransform: 'capitalize' }}>{pet.evolutionStage}</span>
-              <span className="badge badge-outline" style={{ textTransform: 'capitalize' }}>{pet.personality}</span>
-            </div>
-          </div>
-
-          {/* XP bar */}
-          <div style={{ width: '100%' }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 6, fontSize: 12 }}>
-              <span style={{ color: 'var(--text-muted)', fontWeight: 500 }}>Level {pet.level}</span>
-              <span style={{ color: theme.primaryColor, fontWeight: 600 }}>{pet.xp} / {xpMax} XP</span>
-            </div>
-            <div className="progress-track" style={{ height: 6 }}>
-              <motion.div
-                className="progress-fill"
-                initial={{ width: 0 }}
-                animate={{ width: `${xpPct}%` }}
-                transition={{ duration: 1, ease: 'easeOut', delay: 0.3 }}
-              />
-            </div>
-          </div>
-
-          {/* Circular stat rings */}
-          <div style={{ display: 'flex', gap: 16, justifyContent: 'center', width: '100%' }}>
-            <StatRing value={pet.mood}      label="Mood"   color={theme.primaryColor} />
-            <StatRing value={pet.sleep}     label="Sleep"  color="#818cf8" />
-            <StatRing value={pet.happiness} label="Joy"    color="#f472b6" />
-          </div>
-
-          {/* Stat bars */}
-          <div style={{ width: '100%', display: 'flex', flexDirection: 'column', gap: 10 }}>
-            <StatMeter label="Hunger"  value={pet.hunger}  emoji="🍖" />
-            <StatMeter label="Energy"  value={pet.energy}  emoji="⚡" />
-            <StatMeter label="Health"  value={pet.health}  emoji="❤️" />
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 13 }}>
+            <StatMeter label="Hunger"    value={pet.hunger}    emoji="🍖" />
+            <StatMeter label="Energy"    value={pet.energy}    emoji="⚡" />
+            <StatMeter label="Health"    value={pet.health}    emoji="❤️" />
+            <StatMeter label="Happiness" value={pet.happiness} emoji="😊" />
+            <StatMeter label="Mood"      value={pet.mood}      emoji="🌈" />
           </div>
         </motion.div>
 
-        {/* ── Right column ────────────────────────────────────────────── */}
+        {/* Right column */}
         <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
-
-          {/* Quick actions */}
-          <motion.div {...FADE_UP(0.15)}>
+          <motion.div {...FADE(0.13)}>
             <QuickActions pet={pet} userId={appUser.uid} />
           </motion.div>
 
-          {/* Daily tasks + care history */}
-          <motion.div {...FADE_UP(0.2)} style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 14 }}>
+          <motion.div {...FADE(0.17)} style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 14 }}>
             <DailyTasks pet={pet} />
             <CareHistory petId={pet.id} />
           </motion.div>
 
-          {/* Quick nav cards */}
-          <motion.div {...FADE_UP(0.25)} style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 12 }}>
+          {/* Quick nav */}
+          <motion.div {...FADE(0.2)} style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 12 }}>
             {[
-              { href: '/feed',  label: 'Feed', emoji: '🍖', desc: 'Nourish your pet', color: '#fb923c' },
-              { href: '/play',  label: 'Play', emoji: '🎮', desc: 'Play minigames',    color: '#a78bfa' },
-              { href: '/chat',  label: 'Chat', emoji: '💬', desc: 'Talk with AI',      color: theme.primaryColor },
-            ].map((item) => (
-              <Link key={item.href} href={item.href} style={{ textDecoration: 'none' }}>
-                <motion.div
-                  className="glass-card glass-card-hover"
-                  whileHover={{ y: -3 }}
-                  style={{ padding: '18px 16px', cursor: 'pointer' }}
-                >
-                  <div style={{
-                    width: 38, height: 38, borderRadius: 10, marginBottom: 12,
-                    background: `${item.color}18`, border: `1px solid ${item.color}30`,
-                    display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 18,
-                  }}>
-                    {item.emoji}
+              { href: '/feed', label: 'Feed',  Icon: Cookie,         desc: 'Nourish your pet', color: '#ea580c', bg: 'rgba(234,88,12,0.07)',  border: 'rgba(234,88,12,0.18)' },
+              { href: '/play', label: 'Play',  Icon: GameController, desc: 'Play minigames',   color: '#7c3aed', bg: 'rgba(124,58,237,0.07)', border: 'rgba(124,58,237,0.16)' },
+              { href: '/chat', label: 'Chat',  Icon: ChatCircle,     desc: 'Talk with AI',     color: accent,   bg: `${accent}0d`,            border: `${accent}22` },
+            ].map(({ href, label, Icon, desc, color, bg, border }) => (
+              <Link key={href} href={href} style={{ textDecoration: 'none' }}>
+                <motion.div whileHover={{ y: -4 }} whileTap={{ scale: 0.97 }}
+                  style={{ background: 'var(--bg-card)', border: `1.5px solid ${border}`,
+                    borderRadius: 18, padding: '18px 16px',
+                    boxShadow: '0 2px 8px rgba(0,0,0,0.4)', cursor: 'pointer' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 10 }}>
+                    <Icon size={24} weight="duotone" color={color} />
+                    <ArrowRight size={14} color="var(--text-muted)" />
                   </div>
-                  <div style={{ fontWeight: 700, fontSize: 14, marginBottom: 3 }}>{item.label}</div>
-                  <div style={{ fontSize: 12, color: 'var(--text-muted)' }}>{item.desc}</div>
+                  <div style={{ fontWeight: 800, fontSize: 14, color: 'var(--text-primary)', marginBottom: 3 }}>{label}</div>
+                  <div style={{ fontSize: 12, color: 'var(--text-muted)', fontWeight: 600 }}>{desc}</div>
                 </motion.div>
               </Link>
             ))}

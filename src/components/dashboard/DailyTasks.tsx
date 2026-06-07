@@ -23,7 +23,7 @@ export function DailyTasks({ pet }: DailyTasksProps) {
   const { addCoins, addTotalXP } = useGameStore();
 
   const today = new Date().toDateString();
-  const storageKey = `petverse-tasks-${today}-${pet.id}`;
+  const storageKey = `whiskers-tasks-${today}-${pet.id}`;
 
   useEffect(() => {
     try {

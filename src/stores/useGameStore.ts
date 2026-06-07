@@ -125,6 +125,6 @@ export const useGameStore = create<GameStore>()(
           notifications: s.notifications.map((n) => ({ ...n, read: true })),
         })),
     }),
-    { name: 'petverse-game-store' }
+    { name: 'whiskers-game-store' }
   )
 );

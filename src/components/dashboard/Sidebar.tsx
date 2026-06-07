@@ -4,24 +4,24 @@ import { usePathname } from 'next/navigation';
 import Link from 'next/link';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
-  LayoutDashboard, Utensils, Gamepad2, MessageCircle,
-  BarChart2, Users, Trophy, LogOut,
-} from 'lucide-react';
+  House, ForkKnife, GameController, ChatCircle,
+  ChartBar, Trophy, Users, SignOut, PawPrint,
+  Coins, Fire, Heart,
+} from '@phosphor-icons/react';
 import { useAuthStore } from '@/stores/useAuthStore';
-import { usePetStore } from '@/stores/usePetStore';
+import { usePetStore, xpForLevel } from '@/stores/usePetStore';
 import { useGameStore } from '@/stores/useGameStore';
 import { logout } from '@/lib/firebase/auth';
 import { useTheme } from '@/lib/theme-engine/ThemeProvider';
-import { xpForLevel } from '@/stores/usePetStore';
 
 const NAV = [
-  { href: '/dashboard',    label: 'Universe',     icon: LayoutDashboard },
-  { href: '/feed',         label: 'Feed & Care',  icon: Utensils },
-  { href: '/play',         label: 'Play',         icon: Gamepad2 },
-  { href: '/chat',         label: 'AI Chat',      icon: MessageCircle },
-  { href: '/analytics',   label: 'Analytics',    icon: BarChart2 },
-  { href: '/achievements', label: 'Achievements', icon: Trophy },
-  { href: '/social',       label: 'Social',       icon: Users },
+  { href: '/dashboard',    label: 'Home',         icon: House          },
+  { href: '/feed',         label: 'Feed & Care',  icon: ForkKnife      },
+  { href: '/play',         label: 'Play',         icon: GameController },
+  { href: '/chat',         label: 'AI Chat',      icon: ChatCircle     },
+  { href: '/analytics',   label: 'Analytics',    icon: ChartBar       },
+  { href: '/achievements', label: 'Achievements', icon: Trophy         },
+  { href: '/social',       label: 'Social',       icon: Users          },
 ];
 
 const SPECIES_EMOJI: Record<string, string> = {
@@ -34,146 +34,131 @@ export function Sidebar() {
   const appUser  = useAuthStore((s) => s.appUser);
   const { coins, streak } = useGameStore();
   const theme    = useTheme();
-
-  const xpMax = pet ? xpForLevel(pet.level) : 100;
-  const xpPct = pet ? Math.min(100, (pet.xp / xpMax) * 100) : 0;
+  const accent   = theme.primaryColor ?? '#9B6B5A';
+  const xpMax    = pet ? xpForLevel(pet.level) : 100;
+  const xpPct    = pet ? Math.min(100, (pet.xp / xpMax) * 100) : 0;
 
   return (
-    <aside style={{
+    <aside className="sidebar" style={{
       position: 'fixed', left: 0, top: 0, bottom: 0,
-      width: 260,
-      background: 'rgba(6,3,14,0.82)',
-      backdropFilter: 'blur(32px) saturate(200%)',
-      borderRight: '1px solid rgba(255,255,255,0.055)',
-      display: 'flex', flexDirection: 'column',
-      zIndex: 50, overflowY: 'auto',
+      width: 248, zIndex: 50,
+      display: 'flex', flexDirection: 'column', overflowY: 'auto',
     }}>
 
-      {/* ── Logo ────────────────────────────────────────────────────── */}
-      <div style={{ padding: '24px 20px 20px' }}>
+      {/* Brand */}
+      <div style={{ padding: '22px 20px 16px' }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 11 }}>
           <div style={{
-            width: 38, height: 38, borderRadius: 10,
-            background: `linear-gradient(135deg, ${theme.primaryColor}, ${theme.accentColor})`,
+            width: 40, height: 40, borderRadius: 13, background: accent, flexShrink: 0,
             display: 'flex', alignItems: 'center', justifyContent: 'center',
-            fontSize: 20, flexShrink: 0,
-            boxShadow: `0 4px 16px ${theme.glowColor}`,
+            boxShadow: `0 4px 14px ${accent}50`,
           }}>
-            {pet ? SPECIES_EMOJI[pet.species] : '🐾'}
+            <PawPrint size={22} weight="fill" color="white" />
           </div>
           <div>
-            <div style={{ fontWeight: 700, fontSize: 15, letterSpacing: '-0.02em', color: 'var(--text-primary)' }}>
+            <div style={{ fontWeight: 900, fontSize: 17, letterSpacing: '-0.03em', color: 'var(--text-primary)' }}>
               Whiskers
             </div>
-            {pet && (
-              <div style={{ fontSize: 11, color: theme.primaryColor, fontWeight: 500, marginTop: 1 }}>
-                {pet.name}&apos;s universe
-              </div>
-            )}
+            <div style={{ fontSize: 11, color: 'var(--text-muted)', fontWeight: 600 }}>
+              Pet Universe
+            </div>
           </div>
         </div>
       </div>
 
-      {/* ── Pet XP card ─────────────────────────────────────────────── */}
+      <div style={{ height: 1, background: 'var(--border-light)', margin: '0 16px 16px' }} />
+
+      {/* Pet card */}
       {pet && (
-        <div style={{ margin: '0 12px 8px', padding: '14px 16px', borderRadius: 14,
-          background: `linear-gradient(135deg, ${theme.primaryColor}18, ${theme.accentColor}0a)`,
-          border: `1px solid ${theme.primaryColor}22`,
+        <div style={{
+          margin: '0 14px 16px', padding: '16px',
+          background: `${accent}0d`, border: `1.5px solid ${accent}20`, borderRadius: 18,
         }}>
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 10 }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-              <span style={{ fontSize: 22 }}>{SPECIES_EMOJI[pet.species]}</span>
-              <div>
-                <div style={{ fontWeight: 700, fontSize: 13, color: 'var(--text-primary)' }}>{pet.name}</div>
-                <div style={{ fontSize: 11, color: 'var(--text-muted)', textTransform: 'capitalize' }}>{pet.evolutionStage} · {pet.personality}</div>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 11, marginBottom: 14 }}>
+            <div style={{
+              width: 50, height: 50, borderRadius: 15, background: 'var(--bg-card)', flexShrink: 0,
+              display: 'flex', alignItems: 'center', justifyContent: 'center',
+              fontSize: 26, boxShadow: `0 3px 10px ${accent}20`,
+            }}>
+              {SPECIES_EMOJI[pet.species]}
+            </div>
+            <div style={{ flex: 1, minWidth: 0 }}>
+              <div style={{ fontWeight: 800, fontSize: 14, color: 'var(--text-primary)', letterSpacing: '-0.02em' }}>
+                {pet.name}
+              </div>
+              <div style={{ fontSize: 11, color: 'var(--text-muted)', fontWeight: 600, textTransform: 'capitalize' }}>
+                {pet.species} · {pet.evolutionStage}
               </div>
             </div>
             <div style={{
-              background: `linear-gradient(135deg, ${theme.primaryColor}, ${theme.accentColor})`,
-              borderRadius: 8, padding: '3px 8px', fontSize: 11, fontWeight: 700, color: 'white',
-              boxShadow: `0 2px 10px ${theme.glowColor}`,
+              background: accent, color: 'white', borderRadius: 100,
+              padding: '3px 9px', fontSize: 11, fontWeight: 800,
             }}>
               Lv.{pet.level}
             </div>
           </div>
-          {/* XP bar */}
-          <div>
+
+          {/* XP */}
+          <div style={{ marginBottom: 14 }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 5 }}>
-              <span style={{ fontSize: 10, color: 'var(--text-muted)', fontWeight: 500 }}>EXPERIENCE</span>
-              <span style={{ fontSize: 10, color: theme.primaryColor, fontWeight: 600 }}>{pet.xp} / {xpMax} XP</span>
+              <span style={{ fontSize: 10, color: 'var(--text-muted)', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.06em' }}>XP</span>
+              <span style={{ fontSize: 11, color: accent, fontWeight: 800 }}>{pet.xp}/{xpMax}</span>
             </div>
-            <div className="progress-track" style={{ height: 5 }}>
-              <motion.div
-                className="progress-fill"
-                initial={{ width: 0 }}
-                animate={{ width: `${xpPct}%` }}
-                transition={{ duration: 1, ease: 'easeOut' }}
-              />
+            <div className="progress-track" style={{ height: 6 }}>
+              <motion.div className="progress-fill" initial={{ width: 0 }} animate={{ width: `${xpPct}%` }}
+                transition={{ duration: 1.2, ease: 'easeOut' }}
+                style={{ background: `linear-gradient(90deg, ${accent}, ${accent}cc)` }} />
             </div>
           </div>
-          {/* Quick stats */}
-          <div style={{ display: 'flex', gap: 8, marginTop: 12 }}>
-            <div style={{ flex: 1, textAlign: 'center' }}>
-              <div style={{ fontSize: 14 }}>🪙</div>
-              <div style={{ fontSize: 12, fontWeight: 700, color: '#fbbf24' }}>{coins}</div>
+
+          {/* Stats row — real icons, no boxes */}
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1px 1fr 1px 1fr', gap: 8 }}>
+            <div style={{ textAlign: 'center' }}>
+              <Coins size={18} weight="duotone" color="#ca8a04" style={{ display: 'block', margin: '0 auto 3px' }} />
+              <div style={{ fontSize: 12, fontWeight: 800, color: '#ca8a04' }}>{coins}</div>
             </div>
-            <div style={{ width: 1, background: 'rgba(255,255,255,0.07)' }} />
-            <div style={{ flex: 1, textAlign: 'center' }}>
-              <div style={{ fontSize: 14 }}>🔥</div>
-              <div style={{ fontSize: 12, fontWeight: 700, color: '#fb923c' }}>{streak}</div>
+            <div style={{ background: 'var(--border-light)' }} />
+            <div style={{ textAlign: 'center' }}>
+              <Fire size={18} weight="duotone" color="#dc2626" style={{ display: 'block', margin: '0 auto 3px' }} />
+              <div style={{ fontSize: 12, fontWeight: 800, color: '#dc2626' }}>{streak}d</div>
             </div>
-            <div style={{ width: 1, background: 'rgba(255,255,255,0.07)' }} />
-            <div style={{ flex: 1, textAlign: 'center' }}>
-              <div style={{ fontSize: 14 }}>❤️</div>
-              <div style={{ fontSize: 12, fontWeight: 700, color: '#f472b6' }}>{pet.health}</div>
+            <div style={{ background: 'var(--border-light)' }} />
+            <div style={{ textAlign: 'center' }}>
+              <Heart size={18} weight="duotone" color="#e11d48" style={{ display: 'block', margin: '0 auto 3px' }} />
+              <div style={{ fontSize: 12, fontWeight: 800, color: '#e11d48' }}>{pet.health}</div>
             </div>
           </div>
         </div>
       )}
 
-      {/* ── Navigation ──────────────────────────────────────────────── */}
-      <nav style={{ flex: 1, padding: '8px 12px' }}>
-        <div style={{ fontSize: 10, fontWeight: 600, letterSpacing: '0.08em', color: 'var(--text-muted)',
-          padding: '8px 8px 6px', textTransform: 'uppercase' }}>
-          Navigation
+      {/* Navigation */}
+      <nav style={{ flex: 1, padding: '0 12px' }}>
+        <div style={{ fontSize: 9.5, fontWeight: 800, letterSpacing: '0.1em', color: 'var(--text-muted)',
+          padding: '4px 8px 10px', textTransform: 'uppercase' }}>
+          Menu
         </div>
+
         {NAV.map((item, i) => {
-          const isActive = pathname === item.href;
-          const Icon = item.icon;
+          const active = pathname === item.href;
+          const Icon   = item.icon;
           return (
-            <motion.div
-              key={item.href}
-              initial={{ opacity: 0, x: -12 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ delay: i * 0.04, duration: 0.3 }}
-              style={{ position: 'relative', marginBottom: 2 }}
-            >
-              {isActive && (
-                <motion.div
-                  layoutId="sidebar-active"
-                  className="nav-active-indicator"
-                  transition={{ type: 'spring', bounce: 0.2, duration: 0.5 }}
-                />
-              )}
-              <Link
-                href={item.href}
-                style={{
-                  display: 'flex', alignItems: 'center', gap: 10,
-                  padding: '9px 12px 9px 16px',
-                  borderRadius: 10,
-                  textDecoration: 'none',
-                  background: isActive
-                    ? `linear-gradient(135deg, ${theme.primaryColor}1a, ${theme.accentColor}0d)`
-                    : 'transparent',
-                  color: isActive ? theme.primaryColor : 'var(--text-secondary)',
-                  fontWeight: isActive ? 600 : 400,
-                  fontSize: 13.5,
-                  letterSpacing: '-0.01em',
-                  border: isActive ? `1px solid ${theme.primaryColor}20` : '1px solid transparent',
-                  transition: 'all 0.18s ease',
-                }}
-              >
-                <Icon size={15} strokeWidth={isActive ? 2.2 : 1.8} />
+            <motion.div key={item.href} initial={{ opacity: 0, x: -10 }} animate={{ opacity: 1, x: 0 }}
+              transition={{ delay: i * 0.04 }} style={{ position: 'relative', marginBottom: 2 }}>
+              <AnimatePresence>
+                {active && (
+                  <motion.div key="pill" layoutId="nav-pill" className="nav-active-pill"
+                    transition={{ type: 'spring', bounce: 0.2, duration: 0.4 }} />
+                )}
+              </AnimatePresence>
+              <Link href={item.href} style={{
+                display: 'flex', alignItems: 'center', gap: 10, padding: '9px 12px',
+                borderRadius: 12, textDecoration: 'none',
+                color: active ? 'var(--text-primary)' : 'var(--text-muted)',
+                fontWeight: active ? 800 : 600, fontSize: 13.5,
+                position: 'relative', zIndex: 1, transition: 'color 0.15s',
+              }}>
+                <Icon size={16} weight={active ? 'fill' : 'regular'}
+                  color={active ? accent : 'var(--text-muted)'} />
                 {item.label}
               </Link>
             </motion.div>
@@ -181,50 +166,38 @@ export function Sidebar() {
         })}
       </nav>
 
-      {/* ── User footer ─────────────────────────────────────────────── */}
-      <div style={{ padding: '12px', borderTop: '1px solid rgba(255,255,255,0.055)' }}>
-        {appUser && (
-          <div style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '8px 10px 12px' }}>
+      {/* Footer */}
+      {appUser && (
+        <div style={{ padding: '12px 14px', borderTop: '1px solid var(--border-light)' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 10 }}>
             <div style={{
-              width: 32, height: 32, borderRadius: 9, flexShrink: 0,
-              background: `linear-gradient(135deg, ${theme.primaryColor}, ${theme.accentColor})`,
+              width: 34, height: 34, borderRadius: 11, background: accent, flexShrink: 0,
               display: 'flex', alignItems: 'center', justifyContent: 'center',
-              fontSize: 13, fontWeight: 700, color: 'white',
-              boxShadow: `0 2px 12px ${theme.glowColor}`,
+              fontSize: 14, fontWeight: 800, color: 'white',
             }}>
-              {appUser.displayName?.[0]?.toUpperCase() || '?'}
+              {appUser.displayName?.[0]?.toUpperCase() ?? '?'}
             </div>
             <div style={{ flex: 1, minWidth: 0 }}>
-              <div style={{ fontSize: 13, fontWeight: 600, color: 'var(--text-primary)',
-                overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+              <div style={{ fontSize: 13, fontWeight: 800, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
                 {appUser.displayName}
               </div>
-              <div style={{ fontSize: 11, color: 'var(--text-muted)' }}>Trainer</div>
+              <div style={{ fontSize: 11, color: 'var(--text-muted)', fontWeight: 600 }}>Trainer</div>
             </div>
           </div>
-        )}
-        <button
-          onClick={logout}
-          style={{
-            width: '100%', display: 'flex', alignItems: 'center', gap: 8,
-            padding: '9px 12px', borderRadius: 10,
-            background: 'rgba(248,113,113,0.07)', border: '1px solid rgba(248,113,113,0.12)',
-            color: 'rgba(248,113,113,0.75)', cursor: 'pointer',
-            fontSize: 13, fontWeight: 500, fontFamily: 'inherit',
-            transition: 'all 0.18s ease',
+          <button onClick={logout} style={{
+            width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 7,
+            padding: '8px', borderRadius: 10,
+            background: 'rgba(225,29,72,0.06)', border: '1.5px solid rgba(225,29,72,0.14)',
+            color: '#e11d48', cursor: 'pointer', fontSize: 12.5, fontWeight: 700, fontFamily: 'inherit',
+            transition: 'all 0.15s ease',
           }}
-          onMouseEnter={(e) => {
-            (e.currentTarget as HTMLButtonElement).style.background = 'rgba(248,113,113,0.13)';
-            (e.currentTarget as HTMLButtonElement).style.color = '#f87171';
-          }}
-          onMouseLeave={(e) => {
-            (e.currentTarget as HTMLButtonElement).style.background = 'rgba(248,113,113,0.07)';
-            (e.currentTarget as HTMLButtonElement).style.color = 'rgba(248,113,113,0.75)';
-          }}
-        >
-          <LogOut size={14} /> Sign Out
-        </button>
-      </div>
+            onMouseEnter={(e) => { (e.currentTarget as HTMLButtonElement).style.background = 'rgba(225,29,72,0.12)'; }}
+            onMouseLeave={(e) => { (e.currentTarget as HTMLButtonElement).style.background = 'rgba(225,29,72,0.06)'; }}
+          >
+            <SignOut size={14} weight="bold" /> Sign out
+          </button>
+        </div>
+      )}
     </aside>
   );
 }

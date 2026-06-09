@@ -63,9 +63,9 @@ export function CareHistory({ petId }: CareHistoryProps) {
                   alignItems: 'center',
                   gap: 10,
                   padding: '8px 12px',
-                  background: 'rgba(255,255,255,0.7)',
+                  background: 'rgba(255,255,255,0.03)',
                   borderRadius: 10,
-                  border: '1px solid rgba(0,0,0,0.06)',
+                  border: '1px solid rgba(255,255,255,0.08)',
                   borderLeft: `3.5px solid ${info.color}`,
                 }}
               >

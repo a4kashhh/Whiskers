@@ -76,8 +76,8 @@ export function DailyTasks({ pet }: DailyTasksProps) {
                   alignItems: 'center',
                   gap: 12,
                   padding: '10px 14px',
-                  background: done ? 'rgba(74,222,128,0.08)' : 'rgba(255,255,255,0.7)',
-                  border: `1px solid ${done ? 'rgba(74,222,128,0.25)' : 'rgba(0,0,0,0.08)'}`,
+                  background: done ? 'rgba(74,222,128,0.08)' : 'rgba(255,255,255,0.03)',
+                  border: `1px solid ${done ? 'rgba(74,222,128,0.25)' : 'rgba(255,255,255,0.08)'}`,
                   borderRadius: 12,
                   cursor: done ? 'default' : 'pointer',
                   textAlign: 'left',
@@ -90,7 +90,7 @@ export function DailyTasks({ pet }: DailyTasksProps) {
                     width: 22,
                     height: 22,
                     borderRadius: '50%',
-                    border: `2px solid ${done ? '#4ade80' : 'rgba(0,0,0,0.15)'}`,
+                    border: `2px solid ${done ? '#4ade80' : 'rgba(255,255,255,0.15)'}`,
                     background: done ? '#4ade80' : 'transparent',
                     display: 'flex',
                     alignItems: 'center',
@@ -106,7 +106,7 @@ export function DailyTasks({ pet }: DailyTasksProps) {
                   flex: 1,
                   fontSize: 13,
                   fontWeight: 500,
-                  color: done ? 'rgba(0,0,0,0.35)' : 'var(--text-primary)',
+                  color: done ? 'rgba(255,255,255,0.35)' : 'var(--text-primary)',
                   textDecoration: done ? 'line-through' : 'none',
                 }}>
                   {task.label}

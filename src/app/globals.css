@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Comic+Neue:ital,wght@0,400;0,700;1,400;1,700&family=Kalam:wght@400;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Comic+Neue:ital,wght@0,400;0,700;1,400;1,700&display=swap');
 
 @import "tailwindcss";
 
@@ -14,17 +14,17 @@
   --color-accent:     #E89A4B; 
 
   /* Backgrounds */
-  --bg-page:     #050505; /* Black */
-  --bg-base:     #121212; /* Dark container */
-  --bg-surface:  #1A1A1A;
-  --bg-card:     #121212;
-  --bg-elevated: #1A1A1A;
+  --bg-page:     #0F172A; /* Lighter slate blue-gray */
+  --bg-base:     #1E293B; /* Lighter dark container */
+  --bg-surface:  #334155;
+  --bg-card:     #1E293B;
+  --bg-elevated: #334155;
   --bg-input:    transparent;
 
   /* Text */
-  --text-primary:   #F7FAFC; /* Near white */
-  --text-secondary: #A0AEC0; /* Light grey */
-  --text-muted:     #4A5568; /* Darker grey */
+  --text-primary:   #FFFFFF; /* Pure white */
+  --text-secondary: #FFFFFF; /* Pure white */
+  --text-muted:     #FFFFFF; /* Pure white */
 
   /* Borders */
   --border-light:  #2D3748; /* Dark grey border */
@@ -49,12 +49,22 @@
 }
 
 /* ── Reset ────────────────────────────────────────────── */
-*,*::before,*::after { box-sizing: border-box; margin: 0; padding: 0; }
+*,*::before,*::after { 
+  box-sizing: border-box; 
+  margin: 0; 
+  padding: 0;
+  font-family: 'Rubik Vinyl', cursive !important;
+}
+
+.serif-heading, .serif-heading * {
+  font-family: 'Kablammo', cursive !important;
+}
+
 html { font-size: 16px; -webkit-text-size-adjust: 100%; }
 
 /* ── Body ─────────────────────────────────────────────── */
 body {
-  font-family: 'Comic Neue', cursive, sans-serif;
+  font-family: 'Rubik Vinyl', cursive, sans-serif;
   background-color: var(--bg-page);
   color: var(--text-primary);
   min-height: 100vh;
@@ -63,9 +73,15 @@ body {
 }
 
 /* ── Typography ───────────────────────────────────────── */
-h1, h2, h3, .serif-heading {
-  font-family: 'Kalam', cursive;
-  font-weight: 700;
+h1, h2, h3 {
+  font-family: 'Rubik Vinyl', cursive;
+  font-weight: normal;
+  color: var(--text-primary);
+}
+
+.serif-heading {
+  font-family: 'Kablammo', cursive;
+  font-weight: 400;
   color: var(--color-primary);
 }
 

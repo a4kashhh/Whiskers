@@ -52,6 +52,7 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
 
   return (
     <div style={{ minHeight: '100vh', display: 'flex', position: 'relative', overflow: 'hidden' }}>
+      
       {/* Background particles */}
       {pet && <ParticleCanvas species={pet.species} count={10} />}
 

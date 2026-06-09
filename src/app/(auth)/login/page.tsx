@@ -78,10 +78,11 @@ export default function LoginPage() {
             background: 'rgba(255,255,255,0.06)',
             border: '1px solid rgba(255,255,255,0.1)',
             borderRadius: 12,
-            color: 'var(--text-primary)',
+            color: '#ffffff',
+            fontFamily: 'inherit',
             cursor: 'pointer',
             fontSize: 15,
-            fontWeight: 500,
+            fontWeight: 700,
             transition: 'all 0.2s',
             marginBottom: 24,
           }}

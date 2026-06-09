@@ -5,7 +5,7 @@
   
   **A Premium, AI-Powered Virtual Pet Universe**
 
-  [Live Demo](https://your-demo-link.com) • [Report Bug](https://github.com/a4kashhh/whiskers/issues) • [Request Feature](https://github.com/a4kashhh/whiskers/issues)
+  [Live Demo](https://a4kashhh.in) • [Report Bug](https://github.com/a4kashhh/whiskers/issues) • [Request Feature](https://github.com/a4kashhh/whiskers/issues)
 
   <br />
 
@@ -30,6 +30,7 @@ Powered by **Google's Gemini 1.5 Flash AI**, your pet possesses a unique, dynami
 
 ## ✨ Core Features
 
+- **🚇 Immersive 3D Parallax Subway UI:** Experience a fully customized, edge-to-edge cinematic 3D train engine built purely with SVG math and Framer Motion. Watch glowing neon cyberpunk cities fly by in a beautifully layered parallax scene while your companion sits beside you!
 - **🎨 Dynamic Species Theme Engine:** The entire UI (colors, fonts, micro-animations, floating canvas particles) transforms completely based on your pet's species (e.g., Neon Purple for Cats, Bamboo Green for Pandas).
 - **🤖 AI Companion Chat:** Have real, context-aware conversations with your pet! The Gemini AI system prompt is dynamically injected with your pet's current mood, hunger levels, and innate personality.
 - **🎮 Gamified Progression System:** Earn XP, collect coins, and level up your pet. Features a daily streak system, unlockable rarity-tiered achievements, and an evolutionary growth cycle.

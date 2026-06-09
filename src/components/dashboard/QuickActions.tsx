@@ -55,7 +55,7 @@ export function QuickActions({ pet, userId }: QuickActionsProps) {
   return (
     <div className="glass-panel rounded-3xl p-5">
       <div className="flex items-center justify-between mb-4">
-        <span className="text-sm font-bold text-[#050505]">Quick Actions</span>
+        <span className="text-sm font-bold text-[var(--text-primary)]">Quick Actions</span>
         <span className="text-[11px] font-semibold rounded-full px-3 py-0.5 border"
           style={{ color: accent, background: `${accent}10`, borderColor: `${accent}25` }}>
           +5 coins each
@@ -78,7 +78,7 @@ export function QuickActions({ pet, userId }: QuickActionsProps) {
                 padding: '14px 8px',
                 borderRadius: 14,
                 border: `1.5px solid ${isDone ? action.color + '50' : isLoading ? action.color + '30' : 'rgba(0,0,0,0.08)'}`,
-                background: isDone ? `${action.color}12` : isLoading ? `${action.color}08` : 'rgba(255,255,255,0.55)',
+                background: isDone ? `${action.color}12` : isLoading ? `${action.color}08` : 'rgba(255,255,255,0.03)',
                 cursor: loading ? 'not-allowed' : 'pointer',
                 display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 7,
                 transition: 'all 0.18s ease',
@@ -97,10 +97,10 @@ export function QuickActions({ pet, userId }: QuickActionsProps) {
                   : <Icon size={24} weight="duotone" color={action.color} />
                 }
               </motion.div>
-              <span style={{ fontSize: 12, fontWeight: 700, color: isDone ? action.color : '#202127' }}>
+              <span style={{ fontSize: 12, fontWeight: 700, color: isDone ? action.color : 'var(--text-primary)' }}>
                 {action.label}
               </span>
-              <span style={{ fontSize: 10.5, color: '#4f515c', fontWeight: 600 }}>{action.desc}</span>
+              <span style={{ fontSize: 10.5, color: 'var(--text-muted)', fontWeight: 600 }}>{action.desc}</span>
             </motion.button>
           );
         })}

@@ -134,9 +134,11 @@ export default function SignupPage() {
                   background: 'rgba(255,255,255,0.06)',
                   border: '1px solid rgba(255,255,255,0.1)',
                   borderRadius: 12,
-                  color: 'var(--text-primary)',
+                  color: '#ffffff',
+                  fontFamily: 'inherit',
                   cursor: 'pointer',
                   fontSize: 14,
+                  fontWeight: 700,
                 }}
               >
                 {googleLoading ? <Loader2 size={16} /> : '🔑'} Quick signup with Google

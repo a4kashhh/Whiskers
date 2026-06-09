@@ -7,6 +7,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Mail, Lock, User, Loader2, Sparkles, ArrowRight } from 'lucide-react';
 import { signupWithEmail, loginWithGoogle } from '@/lib/firebase/auth';
 import { useToast } from '@/components/ui/ToastProvider';
+import { Logo } from '@/components/ui/Logo';
 
 export default function SignupPage() {
   const router = useRouter();
@@ -63,15 +64,9 @@ export default function SignupPage() {
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5 }}
     >
-      <div style={{ textAlign: 'center', marginBottom: 32 }}>
-        <motion.div
-          animate={{ y: [0, -8, 0] }}
-          transition={{ duration: 2, repeat: Infinity }}
-          style={{ fontSize: 48 }}
-        >
-          ✨
-        </motion.div>
-        <h1 className="gradient-text" style={{ fontSize: 32, fontWeight: 800, marginTop: 8 }}>
+      <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', marginBottom: 32 }}>
+        <Logo size={54} />
+        <h1 className="gradient-text" style={{ fontSize: 24, fontWeight: 800, marginTop: 12 }}>
           Create Universe
         </h1>
         <p style={{ color: 'rgba(255,255,255,0.5)', fontSize: 14, marginTop: 4 }}>

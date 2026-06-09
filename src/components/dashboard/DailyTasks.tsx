@@ -44,7 +44,7 @@ export function DailyTasks({ pet }: DailyTasksProps) {
   const progress = (completed.length / DAILY_TASKS.length) * 100;
 
   return (
-    <div className="glass-card" style={{ padding: 24 }}>
+    <div className="glass-panel rounded-3xl" style={{ padding: 24 }}>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 16 }}>
         <h3 style={{ fontSize: 15, fontWeight: 700, color: 'var(--text-secondary)' }}>📋 Daily Tasks</h3>
         <span style={{ fontSize: 13, fontWeight: 600, color: 'var(--color-primary)' }}>
@@ -76,8 +76,8 @@ export function DailyTasks({ pet }: DailyTasksProps) {
                   alignItems: 'center',
                   gap: 12,
                   padding: '10px 14px',
-                  background: done ? 'rgba(74,222,128,0.08)' : 'rgba(255,255,255,0.03)',
-                  border: `1px solid ${done ? 'rgba(74,222,128,0.2)' : 'rgba(255,255,255,0.06)'}`,
+                  background: done ? 'rgba(74,222,128,0.08)' : 'rgba(255,255,255,0.7)',
+                  border: `1px solid ${done ? 'rgba(74,222,128,0.25)' : 'rgba(0,0,0,0.08)'}`,
                   borderRadius: 12,
                   cursor: done ? 'default' : 'pointer',
                   textAlign: 'left',
@@ -90,7 +90,7 @@ export function DailyTasks({ pet }: DailyTasksProps) {
                     width: 22,
                     height: 22,
                     borderRadius: '50%',
-                    border: `2px solid ${done ? '#4ade80' : 'rgba(255,255,255,0.2)'}`,
+                    border: `2px solid ${done ? '#4ade80' : 'rgba(0,0,0,0.15)'}`,
                     background: done ? '#4ade80' : 'transparent',
                     display: 'flex',
                     alignItems: 'center',
@@ -106,13 +106,13 @@ export function DailyTasks({ pet }: DailyTasksProps) {
                   flex: 1,
                   fontSize: 13,
                   fontWeight: 500,
-                  color: done ? 'rgba(255,255,255,0.4)' : 'var(--text-primary)',
+                  color: done ? 'rgba(0,0,0,0.35)' : 'var(--text-primary)',
                   textDecoration: done ? 'line-through' : 'none',
                 }}>
                   {task.label}
                 </span>
                 <div style={{ display: 'flex', gap: 6, flexShrink: 0 }}>
-                  <span style={{ fontSize: 11, color: '#fbbf24', fontWeight: 600 }}>+{task.coins}🪙</span>
+                  <span style={{ fontSize: 11, color: '#ca8a04', fontWeight: 600 }}>+{task.coins}🪙</span>
                   <span style={{ fontSize: 11, color: 'var(--color-primary)', fontWeight: 600 }}>+{task.xp}XP</span>
                 </div>
               </motion.button>
@@ -134,7 +134,7 @@ export function DailyTasks({ pet }: DailyTasksProps) {
             textAlign: 'center',
             fontSize: 14,
             fontWeight: 600,
-            color: '#4ade80',
+            color: '#16a34a',
           }}
         >
           🎉 All tasks complete! Amazing trainer!

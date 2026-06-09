@@ -1,8 +1,6 @@
-@import url('https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,400;0,500;0,600;0,700;0,800;0,900;1,400&family=Playfair+Display:ital,wght@0,700;1,700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Comic+Neue:ital,wght@0,400;0,700;1,400;1,700&family=Kalam:wght@400;700&display=swap');
 
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss";
 
 /* ════════════════════════════════════════════════════════
    WHISKERS — Fresh & Clean Design System
@@ -56,7 +54,7 @@ html { font-size: 16px; -webkit-text-size-adjust: 100%; }
 
 /* ── Body ─────────────────────────────────────────────── */
 body {
-  font-family: 'Nunito', system-ui, sans-serif;
+  font-family: 'Comic Neue', cursive, sans-serif;
   background-color: var(--bg-page);
   color: var(--text-primary);
   min-height: 100vh;
@@ -66,8 +64,7 @@ body {
 
 /* ── Typography ───────────────────────────────────────── */
 h1, h2, h3, .serif-heading {
-  font-family: 'Playfair Display', serif;
-  font-style: italic;
+  font-family: 'Kalam', cursive;
   font-weight: 700;
   color: var(--color-primary);
 }
@@ -221,4 +218,38 @@ h1, h2, h3, .serif-heading {
   :root { --sidebar-width: 0px; }
   .main-content { margin-left: 0 !important; }
   .app-container { margin: 0; border-radius: 0; min-height: 100vh; }
+}
+
+/* ── Pet Sprite ──────────────────────────────────────────── */
+.pet-sprite-frame {
+  --pet-scale: 1;
+  width: calc(192px * var(--pet-scale));
+  height: calc(208px * var(--pet-scale));
+  overflow: hidden;
+}
+
+.pet-sprite {
+  --sprite-row: 0;
+  --sprite-frames: 6;
+  --sprite-duration: 1100ms;
+  --sprite-y: calc(var(--sprite-row) * -208px);
+  --sprite-end-x: calc(var(--sprite-frames) * -192px);
+  width: 192px;
+  height: 208px;
+  background-image: var(--sprite-url);
+  background-repeat: no-repeat;
+  background-size: 1536px 1872px;
+  image-rendering: pixelated;
+  transform: scale(var(--pet-scale));
+  transform-origin: top left;
+  animation: pet-state var(--sprite-duration) steps(var(--sprite-frames)) infinite;
+}
+
+@keyframes pet-state {
+  from { background-position: 0 var(--sprite-y); }
+  to   { background-position: var(--sprite-end-x) var(--sprite-y); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pet-sprite { animation: none; }
 }

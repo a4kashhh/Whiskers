@@ -17,9 +17,11 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
   useEffect(() => {
     if (initialized && !loading) {
       if (!user) {
-        router.push('/login');
+        const nextUrl = window.location.pathname + window.location.search;
+        router.push(`/login?redirect=${encodeURIComponent(nextUrl)}`);
       } else if (appUser && !appUser.activePetId) {
-        router.push('/onboarding');
+        const search = window.location.search;
+        router.push(`/onboarding${search}`);
       }
     }
   }, [user, appUser, loading, initialized, router]);

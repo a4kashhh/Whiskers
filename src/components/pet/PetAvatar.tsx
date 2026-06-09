@@ -1,7 +1,9 @@
 'use client';
 
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion } from 'framer-motion';
 import type { Pet, PetMood } from '@/types';
+import { PetSprite } from '@/components/pet-sprite';
+import { getPets } from '@/lib/pets';
 
 interface PetAvatarProps {
   pet: Pet;
@@ -10,68 +12,22 @@ interface PetAvatarProps {
   onClick?: () => void;
 }
 
-const PET_EMOJI: Record<string, Record<string, string>> = {
-  cat: {
-    happy: '😺',
-    sad: '😿',
-    excited: '🙀',
-    sleepy: '😴',
-    hungry: '😾',
-    playful: '😸',
-    sick: '🤒',
-    content: '😻',
-  },
-  dog: {
-    happy: '🐕',
-    sad: '🐶',
-    excited: '🐩',
-    sleepy: '😴',
-    hungry: '🦴',
-    playful: '🎾',
-    sick: '🤒',
-    content: '🐕‍🦺',
-  },
-  panda: {
-    happy: '🐼',
-    sad: '🐼',
-    excited: '🐼',
-    sleepy: '😴',
-    hungry: '🎋',
-    playful: '🐼',
-    sick: '🤒',
-    content: '🐼',
-  },
-  fox: {
-    happy: '🦊',
-    sad: '🦊',
-    excited: '🦊',
-    sleepy: '😴',
-    hungry: '🦊',
-    playful: '🦊',
-    sick: '🤒',
-    content: '🦊',
-  },
-  dragon: {
-    happy: '🐉',
-    sad: '🐉',
-    excited: '🔥',
-    sleepy: '😴',
-    hungry: '🐉',
-    playful: '⚡',
-    sick: '🤒',
-    content: '🐲',
-  },
-  bunny: {
-    happy: '🐰',
-    sad: '🐇',
-    excited: '🐰',
-    sleepy: '😴',
-    hungry: '🥕',
-    playful: '🐇',
-    sick: '🤒',
-    content: '🐰',
-  },
+// Map Whiskers species to the closest Petdex sprite slugs
+const SPECIES_TO_SPRITE: Record<string, string> = {
+  cat:    'kebo',
+  dog:    'boba',
+  panda:  'pixel-panda',
+  fox:    'noir-webling',
+  dragon: 'cosmo',
+  bunny:  'scoop',
 };
+
+function getPetSpritesheet(species: string): string | null {
+  const allPets = getPets();
+  const slug = SPECIES_TO_SPRITE[species] || 'boxcat';
+  const found = allPets.find((p) => p.slug === slug);
+  return found?.spritesheetPath ?? allPets[0]?.spritesheetPath ?? null;
+}
 
 function getMood(pet: Pet): PetMood {
   if (pet.health < 20) return 'sick';
@@ -106,9 +62,25 @@ const MOOD_DURATION: Record<PetMood, number> = {
   content: 3,
 };
 
+// Map mood to Petdex state ids
+const MOOD_TO_STATE: Record<PetMood, string> = {
+  happy: 'happy',
+  sad: 'sad',
+  excited: 'jump',
+  sleepy: 'sleep',
+  hungry: 'hungry',
+  playful: 'jump',
+  sick: 'sick',
+  content: 'idle',
+};
+
 export function PetAvatar({ pet, size = 120, interactive = true, onClick }: PetAvatarProps) {
   const mood = getMood(pet);
-  const emoji = PET_EMOJI[pet.species]?.[mood] || PET_EMOJI[pet.species]?.happy || '🐾';
+  const spritesheet = getPetSpritesheet(pet.species);
+  const stateId = (MOOD_TO_STATE[mood] || 'idle') as any;
+
+  // Since PetSprite standard height is 208px, calculate scale to match target size
+  const scale = size / 208;
 
   return (
     <div
@@ -139,9 +111,9 @@ export function PetAvatar({ pet, size = 120, interactive = true, onClick }: PetA
         }}
       />
 
-      {/* Pet emoji */}
+      {/* Pet Animated Sprite */}
       <motion.div
-        key={`emoji-${mood}`}
+        key={`sprite-${mood}`}
         animate={MOOD_ANIMATIONS[mood]}
         transition={{
           duration: MOOD_DURATION[mood],
@@ -151,18 +123,24 @@ export function PetAvatar({ pet, size = 120, interactive = true, onClick }: PetA
         whileHover={interactive ? { scale: 1.1 } : {}}
         whileTap={interactive ? { scale: 0.95 } : {}}
         style={{
-          fontSize: size,
-          lineHeight: 1,
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
           position: 'relative',
           zIndex: 1,
           userSelect: 'none',
-          filter: `drop-shadow(0 0 20px var(--glow-color))`,
         }}
       >
-        {emoji}
+        {spritesheet ? (
+          <PetSprite
+            src={spritesheet}
+            state={stateId}
+            scale={scale}
+            label={`${pet.name} the ${pet.species}`}
+          />
+        ) : (
+          <span style={{ fontSize: size }}>🐾</span>
+        )}
       </motion.div>
 
       {/* Mood badge */}
@@ -170,10 +148,9 @@ export function PetAvatar({ pet, size = 120, interactive = true, onClick }: PetA
         initial={{ opacity: 0, scale: 0.8 }}
         animate={{ opacity: 1, scale: 1 }}
         key={`badge-${mood}`}
+        className="glass-panel"
         style={{
-          background: 'var(--card-bg)',
-          backdropFilter: 'blur(10px)',
-          border: '1px solid rgba(255,255,255,0.1)',
+          border: '1px solid rgba(0,0,0,0.08)',
           borderRadius: 100,
           padding: '3px 10px',
           fontSize: 12,

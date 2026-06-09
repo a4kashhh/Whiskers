@@ -11,11 +11,29 @@ import { usePetStore, xpForLevel } from '@/stores/usePetStore';
 import { useAuthStore } from '@/stores/useAuthStore';
 import { useGameStore } from '@/stores/useGameStore';
 import { useTheme } from '@/lib/theme-engine/ThemeProvider';
-import { PetAvatar } from '@/components/pet/PetAvatar';
+import { PetSprite } from '@/components/pet-sprite';
+import { getPets } from '@/lib/pets';
 import { StatMeter } from '@/components/pet/StatMeter';
 import { QuickActions } from '@/components/dashboard/QuickActions';
 import { DailyTasks } from '@/components/dashboard/DailyTasks';
 import { CareHistory } from '@/components/dashboard/CareHistory';
+
+// Map Whiskers species to the closest Petdex sprite slugs
+const SPECIES_TO_SPRITE: Record<string, string> = {
+  cat:    'kebo',
+  dog:    'boba',
+  panda:  'pixel-panda',
+  fox:    'noir-webling',
+  dragon: 'cosmo',
+  bunny:  'scoop',
+};
+
+function getPetSpritesheet(species: string): string | null {
+  const allPets = getPets();
+  const slug = SPECIES_TO_SPRITE[species];
+  const found = allPets.find((p) => p.slug === slug);
+  return found?.spritesheetPath ?? allPets[0]?.spritesheetPath ?? null;
+}
 
 const FADE = (d = 0) => ({
   initial: { opacity: 0, y: 14 },
@@ -118,9 +136,22 @@ export default function DashboardPage() {
         <motion.div
           animate={{ y: [0, -8, 0] }}
           transition={{ duration: 3.5, repeat: Infinity, ease: 'easeInOut' }}
-          style={{ flexShrink: 0 }}
+          style={{ flexShrink: 0, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '8px' }}
         >
-          <PetAvatar pet={pet} size={96} interactive={false} />
+          {getPetSpritesheet(pet.species) ? (
+            <PetSprite
+              src={getPetSpritesheet(pet.species) || ''}
+              cycleStates
+              cycleIntervalMs={2000}
+              scale={0.7}
+              label={`${pet.name} the ${pet.species}`}
+            />
+          ) : (
+            <div style={{ fontSize: '72px' }}>{pet.species === 'cat' ? '🐱' : '🐾'}</div>
+          )}
+          <span style={{ fontFamily: 'monospace', fontSize: '10px', letterSpacing: '0.18em', color: 'var(--text-muted)', textTransform: 'uppercase' }}>
+            {pet.species}
+          </span>
         </motion.div>
 
         {/* Info */}

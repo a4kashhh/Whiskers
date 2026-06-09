@@ -13,6 +13,7 @@ import { usePetStore, xpForLevel } from '@/stores/usePetStore';
 import { useGameStore } from '@/stores/useGameStore';
 import { logout } from '@/lib/firebase/auth';
 import { useTheme } from '@/lib/theme-engine/ThemeProvider';
+import { Logo } from '@/components/ui/Logo';
 
 const NAV = [
   { href: '/dashboard',    label: 'Home',         icon: House          },
@@ -25,7 +26,7 @@ const NAV = [
 ];
 
 const SPECIES_EMOJI: Record<string, string> = {
-  cat: '🐱', dog: '🐶', panda: '🐼', fox: '🦊', dragon: '🐉', bunny: '🐰',
+  cat: '🐨', dog: '🦦', panda: '🐼', fox: '🕷️', dragon: '🧑‍🚀', bunny: '🍦',
 };
 
 export function Sidebar() {
@@ -39,31 +40,16 @@ export function Sidebar() {
   const xpPct    = pet ? Math.min(100, (pet.xp / xpMax) * 100) : 0;
 
   return (
-    <aside className="sidebar" style={{
+    <aside className="sidebar glass-panel" style={{
       position: 'fixed', left: 0, top: 0, bottom: 0,
       width: 248, zIndex: 50,
       display: 'flex', flexDirection: 'column', overflowY: 'auto',
+      borderRight: '1px solid rgba(0,0,0,0.05)'
     }}>
 
       {/* Brand */}
-      <div style={{ padding: '22px 20px 16px' }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 11 }}>
-          <div style={{
-            width: 40, height: 40, borderRadius: 13, background: accent, flexShrink: 0,
-            display: 'flex', alignItems: 'center', justifyContent: 'center',
-            boxShadow: `0 4px 14px ${accent}50`,
-          }}>
-            <PawPrint size={22} weight="fill" color="white" />
-          </div>
-          <div>
-            <div style={{ fontWeight: 900, fontSize: 17, letterSpacing: '-0.03em', color: 'var(--text-primary)' }}>
-              Whiskers
-            </div>
-            <div style={{ fontSize: 11, color: 'var(--text-muted)', fontWeight: 600 }}>
-              Pet Universe
-            </div>
-          </div>
-        </div>
+      <div style={{ padding: '22px 20px 16px', display: 'flex', justifyContent: 'center' }}>
+        <Logo size={42} />
       </div>
 
       <div style={{ height: 1, background: 'var(--border-light)', margin: '0 16px 16px' }} />

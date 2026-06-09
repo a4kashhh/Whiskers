@@ -86,7 +86,7 @@ export function XPBar({ xp, level, maxXP }: XPBarProps) {
         style={{
           position: 'relative',
           height: 10,
-          background: 'rgba(255,255,255,0.06)',
+          background: 'rgba(0,0,0,0.07)',
           borderRadius: 100,
           overflow: 'visible',
         }}
@@ -151,7 +151,7 @@ export function CircularStat({ value, label, emoji, size = 80 }: CircularStatPro
             cy={size / 2}
             r={radius}
             fill="none"
-            stroke="rgba(255,255,255,0.06)"
+            stroke="rgba(0,0,0,0.07)"
             strokeWidth={6}
           />
           <motion.circle

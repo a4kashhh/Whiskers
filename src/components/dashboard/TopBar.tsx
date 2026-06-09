@@ -21,10 +21,11 @@ export function TopBar() {
   const greeting = hour < 12 ? 'Good morning' : hour < 18 ? 'Good afternoon' : 'Good evening';
 
   return (
-    <header className="topbar" style={{
+    <header className="topbar glass-panel" style={{
       height: 'var(--topbar-height)',
       display: 'flex', alignItems: 'center', justifyContent: 'space-between',
       padding: '0 28px', flexShrink: 0, position: 'sticky', top: 0, zIndex: 40,
+      borderBottom: '1px solid rgba(0,0,0,0.05)'
     }}>
       {/* Left */}
       <div>
@@ -46,7 +47,7 @@ export function TopBar() {
           display: 'flex', alignItems: 'center', gap: 7,
           background: 'var(--bg-card)', border: '1.5px solid rgba(202,138,4,0.22)',
           borderRadius: 100, padding: '7px 14px',
-          boxShadow: '0 2px 6px rgba(0,0,0,0.4)',
+          boxShadow: '0 2px 6px rgba(0,0,0,0.05)',
         }}>
           <Coins size={16} weight="duotone" color="#ca8a04" />
           <span style={{ fontSize: 13, fontWeight: 800, color: '#ca8a04' }}>{coins.toLocaleString()}</span>
@@ -58,7 +59,7 @@ export function TopBar() {
             display: 'flex', alignItems: 'center', gap: 7,
             background: 'var(--bg-card)', border: '1.5px solid rgba(220,38,38,0.2)',
             borderRadius: 100, padding: '7px 14px',
-            boxShadow: '0 2px 6px rgba(0,0,0,0.4)',
+            boxShadow: '0 2px 6px rgba(0,0,0,0.05)',
           }}>
             <Fire size={16} weight="duotone" color="#dc2626" />
             <span style={{ fontSize: 13, fontWeight: 800, color: '#dc2626' }}>{streak}d</span>
@@ -72,7 +73,7 @@ export function TopBar() {
             background: notifOpen ? `${accent}12` : 'var(--bg-card)',
             border: `1.5px solid ${notifOpen ? accent + '30' : 'var(--border-light)'}`,
             display: 'flex', alignItems: 'center', justifyContent: 'center',
-            cursor: 'pointer', boxShadow: '0 2px 6px rgba(0,0,0,0.4)',
+            cursor: 'pointer', boxShadow: '0 2px 6px rgba(0,0,0,0.05)',
             transition: 'all 0.15s ease', position: 'relative',
           }}>
             <Bell size={16} weight={notifOpen ? 'fill' : 'regular'} color={notifOpen ? accent : 'var(--text-muted)'} />
@@ -98,7 +99,7 @@ export function TopBar() {
                   position: 'absolute', right: 0, top: 'calc(100% + 10px)',
                   width: 320, background: 'var(--bg-card)',
                   border: '1.5px solid var(--border-light)', borderRadius: 20,
-                  boxShadow: '0 16px 48px rgba(0,0,0,0.6)', overflow: 'hidden', zIndex: 100,
+                  boxShadow: '0 16px 48px rgba(42,55,120,0.12)', overflow: 'hidden', zIndex: 100,
                 }}>
                 <div style={{ padding: '14px 18px', borderBottom: '1px solid var(--border-light)',
                   display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>

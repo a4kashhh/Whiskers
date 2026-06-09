@@ -26,8 +26,8 @@ export function QuickActions({ pet, userId }: QuickActionsProps) {
   const performAction = usePetStore((s) => s.performAction);
   const { addCoins, updateStreak, addNotification } = useGameStore();
   const { success } = useToast();
-  const theme   = useTheme();
-  const accent  = theme.primaryColor ?? '#9B6B5A';
+  const theme  = useTheme();
+  const accent = theme.primaryColor ?? '#5266ea';
   const [loading, setLoading] = useState<ActivityType | null>(null);
   const [justDone, setJustDone] = useState<ActivityType | null>(null);
 
@@ -53,25 +53,20 @@ export function QuickActions({ pet, userId }: QuickActionsProps) {
   }
 
   return (
-    <div style={{
-      background: 'var(--bg-card)', border: '1.5px solid var(--border-light)',
-      borderRadius: 22, padding: '20px 20px',
-      boxShadow: '0 2px 12px rgba(0,0,0,0.4)',
-    }}>
-      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 16 }}>
-        <span style={{ fontSize: 14, fontWeight: 800, color: 'var(--text-primary)' }}>Quick Actions</span>
-        <span style={{
-          fontSize: 11, fontWeight: 700, color: accent,
-          background: `${accent}10`, borderRadius: 100, padding: '3px 10px',
-          border: `1px solid ${accent}20`,
-        }}>+5 coins each</span>
+    <div className="glass-panel rounded-3xl p-5">
+      <div className="flex items-center justify-between mb-4">
+        <span className="text-sm font-bold text-[#050505]">Quick Actions</span>
+        <span className="text-[11px] font-semibold rounded-full px-3 py-0.5 border"
+          style={{ color: accent, background: `${accent}10`, borderColor: `${accent}25` }}>
+          +5 coins each
+        </span>
       </div>
 
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 8 }}>
+      <div className="grid grid-cols-3 gap-2">
         {ACTIONS.map((action) => {
           const isLoading = loading === action.type;
           const isDone    = justDone === action.type;
-          const { Icon }  = action;
+          const { Icon } = action;
           return (
             <motion.button
               key={action.type}
@@ -82,12 +77,13 @@ export function QuickActions({ pet, userId }: QuickActionsProps) {
               style={{
                 padding: '14px 8px',
                 borderRadius: 14,
-                border: `1.5px solid ${isDone ? action.color + '40' : isLoading ? action.color + '30' : 'var(--border-light)'}`,
-                background: isDone ? `${action.color}0e` : isLoading ? `${action.color}08` : 'var(--bg-surface)',
+                border: `1.5px solid ${isDone ? action.color + '50' : isLoading ? action.color + '30' : 'rgba(0,0,0,0.08)'}`,
+                background: isDone ? `${action.color}12` : isLoading ? `${action.color}08` : 'rgba(255,255,255,0.55)',
                 cursor: loading ? 'not-allowed' : 'pointer',
                 display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 7,
                 transition: 'all 0.18s ease',
                 fontFamily: 'inherit',
+                backdropFilter: 'blur(8px)',
               }}
             >
               <motion.div
@@ -101,10 +97,10 @@ export function QuickActions({ pet, userId }: QuickActionsProps) {
                   : <Icon size={24} weight="duotone" color={action.color} />
                 }
               </motion.div>
-              <span style={{ fontSize: 12, fontWeight: 700, color: isDone ? action.color : 'var(--text-secondary)' }}>
+              <span style={{ fontSize: 12, fontWeight: 700, color: isDone ? action.color : '#202127' }}>
                 {action.label}
               </span>
-              <span style={{ fontSize: 10.5, color: 'var(--text-muted)', fontWeight: 600 }}>{action.desc}</span>
+              <span style={{ fontSize: 10.5, color: '#4f515c', fontWeight: 600 }}>{action.desc}</span>
             </motion.button>
           );
         })}

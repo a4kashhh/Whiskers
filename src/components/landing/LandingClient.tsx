@@ -2,11 +2,31 @@
 
 import { useState } from 'react';
 import { motion } from 'framer-motion';
-import { Sparkle, ArrowRight } from '@phosphor-icons/react';
+import { Sparkle, ArrowRight } from 'lucide-react';
 import Link from 'next/link';
 import { PET_THEMES } from '@/lib/theme-engine/themes';
 import { ParticleCanvas } from '@/components/theme/ParticleCanvas';
+import { PetSprite } from '@/components/pet-sprite';
+import { getPets } from '@/lib/pets';
+import { Logo } from '@/components/ui/Logo';
 import type { PetSpecies } from '@/types';
+
+// Map Whiskers species to the closest Petdex sprite slugs
+const SPECIES_TO_SPRITE: Record<string, string> = {
+  cat:    'kebo',
+  dog:    'boba',
+  panda:  'pixel-panda',
+  fox:    'noir-webling',
+  dragon: 'cosmo',
+  bunny:  'scoop',
+};
+
+function getPetSpritesheet(species: string): string {
+  const allPets = getPets();
+  const slug = SPECIES_TO_SPRITE[species];
+  const found = allPets.find((p) => p.slug === slug);
+  return found?.spritesheetPath ?? allPets[0]?.spritesheetPath ?? '';
+}
 
 function Bubble({ size, x, y, delay = 0, color }: { size: number, x: string, y: string, delay?: number, color: string }) {
   return (
@@ -78,14 +98,7 @@ export default function LandingClient() {
         zIndex: 20
       }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-          <motion.span
-            animate={{ rotate: [0, 10, -10, 0] }}
-            transition={{ duration: 3, repeat: Infinity }}
-            style={{ fontSize: 28 }}
-          >
-            🐾
-          </motion.span>
-          <span style={{ fontWeight: 900, fontSize: 24, letterSpacing: '-0.5px' }}>Whiskers</span>
+          <Logo size={42} />
         </div>
         
         <div style={{ display: 'flex', gap: 16 }}>
@@ -115,7 +128,7 @@ export default function LandingClient() {
             boxShadow: `0 0 20px ${theme.glowColor}`,
             transition: 'all 0.3s'
           }}>
-            <Sparkle size={16} weight="fill" />
+            <Sparkle size={16} fill="currentColor" />
             Get Started
           </Link>
         </div>
@@ -166,10 +179,10 @@ export default function LandingClient() {
           <Bubble size={35} x="65%" y="50%" delay={2} color={theme.secondaryColor} />
           <Bubble size={25} x="60%" y="75%" delay={0.8} color={theme.primaryColor} />
 
-          {/* Floating Pet Emoji */}
+          {/* Floating Pet Character */}
           <motion.div
             key={animal}
-            initial={{ opacity: 0, scale: 0.5, rotate: -20 }}
+            initial={{ opacity: 0, scale: 0.5, rotate: -10 }}
             animate={{ opacity: 1, scale: 1, rotate: 0, y: [0, -20, 0] }}
             transition={{ 
               opacity: { duration: 0.5 },
@@ -179,11 +192,21 @@ export default function LandingClient() {
             style={{ 
               position: 'relative', 
               zIndex: 10, 
-              fontSize: 220,
-              filter: `drop-shadow(0 0 40px ${theme.glowColor})`
+              filter: `drop-shadow(0 0 40px ${theme.glowColor})`,
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              width: '280px',
+              height: '280px'
             }}
           >
-            {theme.emoji}
+            <PetSprite
+              src={getPetSpritesheet(animal)}
+              cycleStates
+              cycleIntervalMs={1200}
+              scale={1.2}
+              label={theme.name}
+            />
           </motion.div>
         </div>
 
@@ -228,7 +251,7 @@ export default function LandingClient() {
             transition={{ delay: 0.2 }}
             style={{ fontSize: 20, fontWeight: 800, marginBottom: 24, color: '#F7FAFC' }}
           >
-            choose your companion
+            Choose your companion
           </motion.h3>
 
           {/* Pet Selector Group */}
@@ -249,14 +272,26 @@ export default function LandingClient() {
                     background: isSelected ? `${petTheme.primaryColor}15` : '#121212',
                     border: `2px solid ${isSelected ? petTheme.primaryColor : '#2D3748'}`,
                     display: 'flex', 
+                    flexDirection: 'column',
                     alignItems: 'center', 
                     gap: 12,
                     transition: 'all 0.2s',
                     boxShadow: isSelected ? `0 0 20px ${petTheme.glowColor}` : 'none'
                   }}>
-                    <span style={{ fontSize: 24 }}>{petTheme.emoji}</span>
-                    <span style={{ fontSize: 15, fontWeight: 700, color: isSelected ? '#F7FAFC' : '#A0AEC0', textTransform: 'capitalize' }}>
-                      {type}
+                    <div style={{ 
+                      width: '76px', height: '83px', 
+                      display: 'flex', alignItems: 'center', justifyContent: 'center' 
+                    }}>
+                      <PetSprite
+                        src={getPetSpritesheet(type)}
+                        cycleStates={isSelected}
+                        cycleIntervalMs={1500}
+                        scale={0.4}
+                        label={petTheme.name}
+                      />
+                    </div>
+                    <span style={{ fontSize: 14, fontWeight: 700, color: isSelected ? '#F7FAFC' : '#A0AEC0', textAlign: 'center' }}>
+                      {petTheme.name}
                     </span>
                   </div>
                   <input 
@@ -294,7 +329,7 @@ export default function LandingClient() {
               boxShadow: `0 0 30px ${theme.glowColor}`,
               transition: 'all 0.3s'
             }}>
-              Adopt Now <ArrowRight size={18} weight="bold" />
+              Adopt Now <ArrowRight size={20} />
             </Link>
           </motion.div>
 

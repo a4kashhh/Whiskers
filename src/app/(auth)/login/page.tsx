@@ -7,6 +7,7 @@ import { motion } from 'framer-motion';
 import { Mail, Lock, Loader2, Sparkles } from 'lucide-react';
 import { loginWithEmail, loginWithGoogle } from '@/lib/firebase/auth';
 import { useToast } from '@/components/ui/ToastProvider';
+import { Logo } from '@/components/ui/Logo';
 import type { Metadata } from 'next';
 
 export default function LoginPage() {
@@ -54,21 +55,9 @@ export default function LoginPage() {
       transition={{ duration: 0.5 }}
     >
       {/* Logo */}
-      <div style={{ textAlign: 'center', marginBottom: 32 }}>
-        <motion.div
-          animate={{ rotate: [0, 10, -10, 0] }}
-          transition={{ duration: 2, repeat: Infinity, repeatDelay: 3 }}
-          style={{ fontSize: 48, display: 'inline-block' }}
-        >
-          🐾
-        </motion.div>
-        <h1
-          className="gradient-text"
-          style={{ fontSize: 32, fontWeight: 800, marginTop: 8, letterSpacing: '-0.5px' }}
-        >
-          Whiskers
-        </h1>
-        <p style={{ color: 'rgba(255,255,255,0.5)', fontSize: 14, marginTop: 4 }}>
+      <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', marginBottom: 32 }}>
+        <Logo size={54} />
+        <p style={{ color: 'rgba(255,255,255,0.5)', fontSize: 14, marginTop: 12 }}>
           Sign in to your universe
         </p>
       </div>

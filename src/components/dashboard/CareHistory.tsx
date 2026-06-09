@@ -32,7 +32,7 @@ export function CareHistory({ petId }: CareHistoryProps) {
   }, [petId]);
 
   return (
-    <div className="glass-card" style={{ padding: 24 }}>
+    <div className="glass-panel rounded-3xl" style={{ padding: 24 }}>
       <h3 style={{ fontSize: 15, fontWeight: 700, color: 'var(--text-secondary)', marginBottom: 16 }}>
         🕐 Care History
       </h3>
@@ -63,9 +63,10 @@ export function CareHistory({ petId }: CareHistoryProps) {
                   alignItems: 'center',
                   gap: 10,
                   padding: '8px 12px',
-                  background: 'rgba(255,255,255,0.03)',
+                  background: 'rgba(255,255,255,0.7)',
                   borderRadius: 10,
-                  borderLeft: `3px solid ${info.color}`,
+                  border: '1px solid rgba(0,0,0,0.06)',
+                  borderLeft: `3.5px solid ${info.color}`,
                 }}
               >
                 <span style={{ fontSize: 18 }}>{info.emoji}</span>
@@ -75,7 +76,7 @@ export function CareHistory({ petId }: CareHistoryProps) {
                     {formatDistanceToNow(activity.timestamp, { addSuffix: true })}
                   </div>
                 </div>
-                <div style={{ fontSize: 11, fontWeight: 600, color: '#fbbf24' }}>+{activity.xpGained}XP</div>
+                <div style={{ fontSize: 11, fontWeight: 800, color: 'var(--color-primary)' }}>+{activity.xpGained}XP</div>
               </motion.div>
             );
           })}

@@ -5,7 +5,7 @@
   
   **A Premium, AI-Powered Virtual Pet Universe**
 
-  [Live Demo](https://whiskers.a4kashhh.in) • [Report Bug](https://github.com/a4kashhh/whiskers/issues) • [Request Feature](https://github.com/a4kashhh/whiskers/issues)
+  [Live Demo](https://a4kashhh.in) • [Report Bug](https://github.com/a4kashhh/whiskers/issues) • [Request Feature](https://github.com/a4kashhh/whiskers/issues)
 
   <br />
 

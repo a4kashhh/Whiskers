@@ -162,12 +162,19 @@ export default function LandingClient() {
       </svg>
 
       {/* Floating Logo */}
-      <div className="absolute top-4 left-4 md:top-[30px] md:left-[60px] z-50">
+      <div style={{ position: 'absolute', top: '30px', left: '60px', zIndex: 50 }}>
         <Logo size={42} />
       </div>
 
       {/* Floating Buttons */}
-      <div className="absolute top-4 right-4 md:top-[30px] md:right-[60px] flex gap-2 md:gap-4 z-50">
+      <div style={{
+        position: 'absolute',
+        top: '30px',
+        right: '60px',
+        display: 'flex',
+        gap: '16px',
+        zIndex: 50
+      }}>
         <Link href="/login" style={{
           background: 'rgba(5, 5, 5, 0.4)',
           color: '#A0AEC0',
@@ -326,57 +333,68 @@ export default function LandingClient() {
                       <polygon points={poly([[260,250,z], [290,320,z], [230,320,z]])} fill="none" stroke="#475569" strokeWidth="6" strokeLinejoin="round" />
                     </g>
                   ))}
-                  {/* Pet seamlessly synced with SVG scaling */}
+                </svg>
+
+                {/* Pet positioned in 3D Space */}
+                <div style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', zIndex: 20 }}>
                   {(() => {
+                    // Just render the currently selected animal in the foreground!
                     const zDepth = 950; // Align exactly with the 2nd vertical pole
-                    const proj = project(150, 650, zDepth);
+                    const proj = project(150, 650, zDepth); // x=150 is the edge of the seat next to the pole at x=180
                     
-                    const width = 400;
-                    const height = 400;
+                    const leftPercent = (proj.x / w) * 100;
+                    const topPercent = (proj.y / h) * 100;
 
                     return (
-                      <foreignObject 
-                        x={proj.x - width/2} 
-                        y={proj.y - height} 
-                        width={width} 
-                        height={height} 
-                        style={{ overflow: 'visible' }}
+                      <motion.div
+                        key={animal}
+                        initial={{ opacity: 0, scale: 0.8 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        transition={{ duration: 0.5 }}
+                        style={{
+                          position: 'absolute',
+                          left: `${leftPercent}%`,
+                          top: `${topPercent}%`,
+                          transform: `translate(-50%, -100%) scale(${proj.scale * 1.5})`,
+                          filter: `drop-shadow(0 0 25px ${theme.glowColor}) drop-shadow(0 10px 10px rgba(0,0,0,0.8))`,
+                          zIndex: 30
+                        }}
                       >
-                        <motion.div
-                          key={animal}
-                          initial={{ opacity: 0, scale: 0.8 }}
-                          animate={{ opacity: 1, scale: 1 }}
-                          transition={{ duration: 0.5 }}
-                          style={{
-                            width: '100%',
-                            height: '100%',
-                            display: 'flex',
-                            alignItems: 'flex-end',
-                            justifyContent: 'center',
-                            transform: `scale(${proj.scale * 1.5})`,
-                            transformOrigin: 'bottom center',
-                            filter: `drop-shadow(0 0 25px ${theme.glowColor}) drop-shadow(0 10px 10px rgba(0,0,0,0.8))`
-                          }}
-                        >
-                          <PetSprite
-                            src={getPetSpritesheet(animal)}
-                            cycleStates={false}
-                            state="waving"
-                            scale={1}
-                          />
-                        </motion.div>
-                      </foreignObject>
+                        <PetSprite
+                          src={getPetSpritesheet(animal)}
+                          cycleStates={false}
+                          state="waving"
+                          scale={1}
+                        />
+                      </motion.div>
                     );
                   })()}
-                </svg>
+                </div>
               </>
             );
           })()}
         </div>
 
         {/* Right Form Section (Floating Overlay) */}
-        <div className="absolute bottom-0 left-0 right-0 md:left-auto md:right-[60px] md:bottom-[40px] w-full md:max-w-[380px] p-6 md:p-[30px] flex flex-col justify-center z-40 bg-black/80 md:bg-black/65 backdrop-blur-xl border-t md:border border-white/5 rounded-t-[32px] md:rounded-[24px] shadow-[0_20px_40px_rgba(0,0,0,0.4)]"
-             style={{ WebkitBackdropFilter: 'blur(20px)' }}>
+        <div style={{
+          position: 'absolute',
+          right: '60px',
+          top: 'auto',
+          bottom: '40px',
+          width: '100%',
+          maxWidth: '380px',
+          padding: '30px',
+          display: 'flex',
+          flexDirection: 'column',
+          justifyContent: 'center',
+          zIndex: 40,
+          background: 'rgba(5, 5, 5, 0.65)',
+          backdropFilter: 'blur(20px)',
+          WebkitBackdropFilter: 'blur(20px)',
+          borderRadius: 24,
+          border: '1px solid rgba(255, 255, 255, 0.05)',
+          boxShadow: '0 20px 40px rgba(0, 0, 0, 0.4)'
+        }}>
           
           <motion.h1 
             key={`h1-${animal}`}

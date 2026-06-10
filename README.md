@@ -22,21 +22,21 @@
 
 <br />
 
-## 🌟 Overview
+##  Overview
 
 **Whiskers** is a production-grade, highly polished virtual pet simulator that blends gamification, artificial intelligence, and beautiful UI/UX design into a cohesive digital universe. Adopt a companion—from a cozy Panda to a cyberpunk Dragon—and manage their health, happiness, and energy.
 
 Powered by **Google's Gemini 1.5 Flash AI**, your pet possesses a unique, dynamic personality that reacts emotionally to your actions. The entire application interface dynamically shifts its theme, color palette, and particle effects based on your chosen species, delivering a breathtaking and personalized experience.
 
-## ✨ Core Features
+##  Core Features
 
-- **🚇 Immersive 3D Parallax Subway UI:** Experience a fully customized, edge-to-edge cinematic 3D train engine built purely with SVG math and Framer Motion. Watch glowing neon cyberpunk cities fly by in a beautifully layered parallax scene while your companion sits beside you!
-- **🎨 Dynamic Species Theme Engine:** The entire UI (colors, fonts, micro-animations, floating canvas particles) transforms completely based on your pet's species (e.g., Neon Purple for Cats, Bamboo Green for Pandas).
-- **🤖 AI Companion Chat:** Have real, context-aware conversations with your pet! The Gemini AI system prompt is dynamically injected with your pet's current mood, hunger levels, and innate personality.
-- **🎮 Gamified Progression System:** Earn XP, collect coins, and level up your pet. Features a daily streak system, unlockable rarity-tiered achievements, and an evolutionary growth cycle.
-- **📊 Advanced Wellbeing Analytics:** Beautiful, glassmorphic charts built with Recharts track your pet's 7-day wellbeing, mood history, and your interaction frequency.
-- **⚡ Real-Time Sync & Offline Persistence:** Built with Firebase Firestore and Zustand to ensure lightning-fast UI updates, offline capability, and cross-device synchronization.
-- **📱 PWA Ready:** Fully installable as a Progressive Web App (PWA) for a native-like app experience on both iOS and Android.
+- **  Immersive 3D Parallax Subway UI:** Experience a fully customized, edge-to-edge cinematic 3D train engine built purely with SVG math and Framer Motion. Watch glowing neon cyberpunk cities fly by in a beautifully layered parallax scene while your companion sits beside you!
+- **  Dynamic Species Theme Engine:** The entire UI (colors, fonts, micro-animations, floating canvas particles) transforms completely based on your pet's species (e.g., Neon Purple for Cats, Bamboo Green for Pandas).
+- **  AI Companion Chat:** Have real, context-aware conversations with your pet! The Gemini AI system prompt is dynamically injected with your pet's current mood, hunger levels, and innate personality.
+- **  Gamified Progression System:** Earn XP, collect coins, and level up your pet. Features a daily streak system, unlockable rarity-tiered achievements, and an evolutionary growth cycle.
+- **  Advanced Wellbeing Analytics:** Beautiful, glassmorphic charts built with Recharts track your pet's 7-day wellbeing, mood history, and your interaction frequency.
+- **  Real-Time Sync & Offline Persistence:** Built with Firebase Firestore and Zustand to ensure lightning-fast UI updates, offline capability, and cross-device synchronization.
+- **  PWA Ready:** Fully installable as a Progressive Web App (PWA) for a native-like app experience on both iOS and Android.
 
 ## 🛠️ Comprehensive Tech Stack
 
@@ -72,7 +72,7 @@ Whiskers was built using cutting-edge, modern web technologies:
 - **[Next-PWA](https://github.com/shadowwalker/next-pwa)** - Zero-config PWA plugin for Next.js.
 - **ESLint & Prettier** - Code linting and formatting.
 
-## 🚀 Getting Started
+## Getting Started
 
 Follow these instructions to get a copy of the project up and running on your local machine.
 
@@ -148,7 +148,7 @@ src/
 └── types/                # Strict TypeScript interfaces
 ```
 
-## 🤝 Contributing
+## Contributing
 
 Contributions are what make the open-source community such an amazing place to learn, inspire, and create. Any contributions you make are **greatly appreciated**.
 
@@ -162,7 +162,7 @@ Contributions are what make the open-source community such an amazing place to l
 
 Distributed under the MIT License. See `LICENSE` for more information.
 
-## 💌 Acknowledgments
+## Acknowledgments
 
 - Design inspiration drawn from modern glassmorphism and hyper-casual gaming UI.
 - Emojis provided by [Animated Fluent Emojis](https://github.com/Tarikul-Islam-Anik/Animated-Fluent-Emojis).

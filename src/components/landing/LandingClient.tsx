@@ -400,7 +400,8 @@ export default function LandingClient() {
             key={`h1-${animal}`}
             initial={{ opacity: 0, x: 20 }}
             animate={{ opacity: 1, x: 0 }}
-            style={{ fontSize: 48, fontWeight: 900, marginBottom: 16, letterSpacing: '-1.5px', lineHeight: 1.1 }}
+            className="serif-heading"
+            style={{ fontSize: 52, fontWeight: 400, marginBottom: 16, lineHeight: 1.1 }}
           >
             Your Pet.<br/>
             <span style={{ 

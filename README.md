@@ -40,7 +40,7 @@ Powered by **Google's Gemini 1.5 Flash AI**, your pet possesses a unique, dynami
 
 ## 🛠️ Comprehensive Tech Stack
 
-Whiskers was built using cutting-edge, modern web technologies:
+Whiskers was built using cutting-edge, modern web technologie:
 
 ### **Core Framework & Language**
 - **[Next.js 15](https://nextjs.org/)** - React framework using the App Router and Server Components.

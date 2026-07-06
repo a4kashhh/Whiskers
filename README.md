@@ -76,7 +76,7 @@ Whiskers was built using cutting-edge, modern web technologie:
 
 Follow these instructions to get a copy of the project up and running on your local machine.
 
-### Prerequisites
+### Prerequisites:
 
 - Node.js (v18.17.0 or higher)
 - npm, yarn, or pnpm
